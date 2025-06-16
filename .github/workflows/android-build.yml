@@ -9,7 +9,7 @@ on:
 
 env:
   # Build configuration
-  JAVA_VERSION: '17'
+  JAVA_VERSION: '21'
   ANDROID_API_LEVEL: '34'
   ANDROID_BUILD_TOOLS: '34.0.0'
   
@@ -77,15 +77,14 @@ jobs:
           ~/.gradle/wrapper
         key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
         
-    - name: 🔐 Create Keystore
+    - name: 🔐 Verify Keystore
       run: |
-        echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 -d > app/release-key.keystore
+        ls -la app/release-key.keystore
         
     - name: 🚀 Build Release APK
       run: ./gradlew assembleProdRelease --stacktrace
       env:
         JAVA_OPTS: "-Djdk.util.jar.enableMultiRelease=false"
-      env:
         OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
         RELEASE_KEYSTORE_PASSWORD: ${{ secrets.RELEASE_KEYSTORE_PASSWORD }}
         RELEASE_KEY_ALIAS: ${{ secrets.RELEASE_KEY_ALIAS }}
