@@ -55,12 +55,7 @@ class MyStrainsAdapter(
                 strainImage.setImageResource(R.drawable.placeholder_strain)
             }
             
-            // Click listener
-            cardView.setOnClickListener {
-                onStrainClick(strain)
-            }
-            
-            // Animazione card
+            // Click listener con animazione
             cardView.setOnClickListener {
                 cardView.animate()
                     .scaleX(0.95f)
