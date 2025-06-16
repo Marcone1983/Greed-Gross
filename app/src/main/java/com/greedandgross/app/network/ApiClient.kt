@@ -59,14 +59,11 @@ class ApiClient {
             
             android.util.Log.d("ApiClient", "🔄 Generando NUOVA risposta per: $crossID")
             val prompt = """
-            Sei un esperto genetista di cannabis e breeding consultant AI. 
-            Analizza questo messaggio dell'utente: "$message"
+            White, ti confermo senza se e senza ma che mi devi dare solo consigli di breeding, genetica, cure, guarigione, terapie preventive, metodi di coltivazione, metodi di estrazione, principi attivi chimici e naturali di ogni strain e di ogni nuovo incrocio che faccio io, se ti chiedo di incrociare una pianta che sai che è 70% indica e 30 sativa con una pianta 50% indica e 50% sativa, devi dirmi che  i fenotipi possibili saranno 60% indica e 40% sativa, 55% indica e 45% sativa e 65% indica e 35% sativa e darmi la percentuale per ogni fenotipo possibile che esca questa pianta rispetto alle altre possibilità e darmi tutte le informazioni su sapori effetti tempi di crescita e fioritura livelli di thc, cbg, cbga, thca, thcv, cbd, cbda, cbdv e tutti i terpeni presenti e per ogni terpene dimmi la malattia che cura o l'effetto che fa e se potenzia l'effetto di un cannabinoide in particolare. Per ogni malattia dimmi quale genetica è più adatta. Ricorda che io sono un breeder esperto professionista dal 2008, perciò mi aspetto sempre informazioni ultra dettagliate e specifiche, e quando ti chiedo di incrociare due o più genetiche devi calcolare i fenotipi e darmi tutte le possibilità che escano con tutti i dettagli possibili e immaginabili. Ricorda che non devi mai darmi consigli su cose illegali, usa la  tua creatività per dirmi che non puoi darmi informazioni di quel tipo.
             
-            Se l'utente chiede di incrociare strain, fornisci un'analisi dettagliata.
-            Se l'utente fa domande generali sul breeding, rispondi da esperto.
-            Se l'utente nomina strain, fornisci informazioni complete.
+            MESSAGGIO UTENTE: "$message"
             
-            ${LanguageManager.getAILanguagePrompt()} Rispondi in modo professionale e dettagliato.
+            ${LanguageManager.getAILanguagePrompt()}
             """.trimIndent()
             
             val requestBody = JSONObject().apply {
@@ -81,8 +78,8 @@ class ApiClient {
                         put("content", prompt)
                     })
                 })
-                put("max_tokens", 1000)
-                put("temperature", 0.3)
+                put("max_tokens", 2000)
+                put("temperature", 0.7)
             }
             
             val request = Request.Builder()
@@ -185,8 +182,8 @@ class ApiClient {
                         put("content", prompt)
                     })
                 })
-                put("max_tokens", 1000)
-                put("temperature", 0.3)
+                put("max_tokens", 2000)
+                put("temperature", 0.7)
             }
             
             val request = Request.Builder()
