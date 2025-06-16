@@ -208,44 +208,31 @@ class LoginActivity : AppCompatActivity() {
         // Start animation
         progressAnimator.start()
         
-        if (BuildConfig.DEBUG) {
-            // In debug, salta Firebase auth e vai diretto
-            android.util.Log.d("LoginActivity", "Debug mode: Skipping Firebase auth")
-            Toast.makeText(this@LoginActivity, "✅ Welcome $username! (Debug Mode)", Toast.LENGTH_SHORT).show()
-            
-            lifecycleScope.launch {
-                delay(1500) // Wait for animation
-                
-                // Navigate to main app
-                val intent = Intent(this@LoginActivity, MainActivity::class.java)
-                intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-                startActivity(intent)
-                finish()
-            }
-        } else {
-            // Firebase anonymous auth solo in produzione
-            auth.signInAnonymously()
-                .addOnCompleteListener { task ->
-                    if (task.isSuccessful) {
-                        lifecycleScope.launch {
-                            delay(1500) // Wait for animation
-                            
-                            Toast.makeText(this@LoginActivity, "✅ Welcome $username!", Toast.LENGTH_SHORT).show()
-                            
-                            // Navigate to main app
-                            val intent = Intent(this@LoginActivity, MainActivity::class.java)
-                            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-                            startActivity(intent)
-                            finish()
-                        }
-                    } else {
-                        submitButton.isEnabled = true
-                        submitButton.text = if (isLoginMode) "🚀 LOGIN" else "🌱 CREATE ACCOUNT"
-                        val error = task.exception?.message ?: "Unknown error"
-                        Toast.makeText(this@LoginActivity, "❌ Connection failed: $error", Toast.LENGTH_LONG).show()
-                        android.util.Log.e("LoginActivity", "Auth failed", task.exception)
+        // SEMPRE Firebase anonymous auth (anche in debug)
+        auth.signInAnonymously()
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    lifecycleScope.launch {
+                        delay(1500) // Wait for animation
+                        
+                        val mode = if (BuildConfig.DEBUG) " (Debug Mode)" else ""
+                        Toast.makeText(this@LoginActivity, "✅ Welcome $username!$mode", Toast.LENGTH_SHORT).show()
+                        
+                        android.util.Log.d("LoginActivity", "Firebase auth successful, UID: ${auth.currentUser?.uid}")
+                        
+                        // Navigate to main app
+                        val intent = Intent(this@LoginActivity, MainActivity::class.java)
+                        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                        startActivity(intent)
+                        finish()
                     }
+                } else {
+                    submitButton.isEnabled = true
+                    submitButton.text = if (isLoginMode) "🚀 LOGIN" else "🌱 CREATE ACCOUNT"
+                    val error = task.exception?.message ?: "Unknown error"
+                    Toast.makeText(this@LoginActivity, "❌ Connection failed: $error", Toast.LENGTH_LONG).show()
+                    android.util.Log.e("LoginActivity", "Auth failed", task.exception)
                 }
-        }
+            }
     }
 }

@@ -78,15 +78,6 @@ class GlobalChatActivity : AppCompatActivity() {
         
         android.util.Log.d("GlobalChat", "Starting Firebase auth...")
         
-        if (BuildConfig.DEBUG) {
-            // In debug, simula connessione riuscita
-            currentUserName = generateRandomUsername()
-            addSystemMessage("✅ [DEBUG] Connesso come $currentUserName")
-            addSystemMessage("⚠️ Chat offline - Firebase rules restrictive")
-            addSystemMessage("🔧 Configura regole: global_chat: .read/.write = auth != null")
-            loadingIndicator.visibility = View.GONE
-            return
-        }
         
         auth.signInAnonymously()
             .addOnCompleteListener(this) { task ->
