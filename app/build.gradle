@@ -22,14 +22,10 @@ android {
 
     signingConfigs {
         release {
-            def keystorePath = System.getenv("RELEASE_KEYSTORE_PATH") ?: project.findProperty("RELEASE_KEYSTORE_PATH") ?: 'release-key.keystore'
-            def keystorePwd = System.getenv("RELEASE_KEYSTORE_PASSWORD") ?: project.findProperty("RELEASE_KEYSTORE_PASSWORD") ?: 'greedgross2024'
-            def keyAliasName = System.getenv("RELEASE_KEY_ALIAS") ?: project.findProperty("RELEASE_KEY_ALIAS") ?: 'greed-gross-key'
-
-            storeFile file(keystorePath)
-            storePassword keystorePwd
-            keyAlias keyAliasName
-            keyPassword keystorePwd
+            storeFile file('release-key.keystore')
+            storePassword System.getenv("RELEASE_KEYSTORE_PASSWORD") ?: 'greedgross123'
+            keyAlias System.getenv("RELEASE_KEY_ALIAS") ?: 'greed-gross-key' 
+            keyPassword System.getenv("RELEASE_KEY_PASSWORD") ?: 'greedgross123'
         }
     }
     
