@@ -154,6 +154,8 @@ class LoginActivity : AppCompatActivity() {
         val username = usernameField.text.toString().trim()
         val password = passwordField.text.toString()
         
+        android.util.Log.d("LoginActivity", "Attempting login with username: $username")
+        
         if (username.isEmpty() || password.isEmpty()) {
             Toast.makeText(this, "⚠️ Please fill all fields", Toast.LENGTH_SHORT).show()
             return
@@ -178,6 +180,8 @@ class LoginActivity : AppCompatActivity() {
     }
     
     private fun quickLogin(username: String, message: String) {
+        android.util.Log.d("LoginActivity", "Quick login: $username")
+        
         usernameField.setText(username)
         passwordField.setText("cannabis123")
         
@@ -194,21 +198,23 @@ class LoginActivity : AppCompatActivity() {
         progressAnimator.duration = 1500
         progressAnimator.repeatCount = 2
         
-        lifecycleScope.launch {
-            progressAnimator.start()
-            delay(3000) // Fake loading time
-            
-            // Save username for the session
-            getSharedPreferences("greed_gross_prefs", MODE_PRIVATE)
-                .edit()
-                .putString("username", username)
-                .putString("login_type", if (isLoginMode) "login" else "register")
-                .apply()
-            
-            // Firebase anonymous auth
-            auth.signInAnonymously()
-                .addOnCompleteListener { task ->
-                    if (task.isSuccessful) {
+        // Save username immediately
+        getSharedPreferences("greed_gross_prefs", MODE_PRIVATE)
+            .edit()
+            .putString("username", username)
+            .putString("login_type", if (isLoginMode) "login" else "register")
+            .apply()
+        
+        // Start animation
+        progressAnimator.start()
+        
+        // Firebase anonymous auth
+        auth.signInAnonymously()
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    lifecycleScope.launch {
+                        delay(1500) // Wait for animation
+                        
                         Toast.makeText(this@LoginActivity, "✅ Welcome $username!", Toast.LENGTH_SHORT).show()
                         
                         // Navigate to main app
@@ -216,12 +222,14 @@ class LoginActivity : AppCompatActivity() {
                         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                         startActivity(intent)
                         finish()
-                    } else {
-                        submitButton.isEnabled = true
-                        submitButton.text = if (isLoginMode) "🚀 LOGIN" else "🌱 CREATE ACCOUNT"
-                        Toast.makeText(this@LoginActivity, "❌ Connection failed", Toast.LENGTH_SHORT).show()
                     }
+                } else {
+                    submitButton.isEnabled = true
+                    submitButton.text = if (isLoginMode) "🚀 LOGIN" else "🌱 CREATE ACCOUNT"
+                    val error = task.exception?.message ?: "Unknown error"
+                    Toast.makeText(this@LoginActivity, "❌ Connection failed: $error", Toast.LENGTH_LONG).show()
+                    android.util.Log.e("LoginActivity", "Auth failed", task.exception)
                 }
-        }
+            }
     }
 }
