@@ -24,11 +24,11 @@ android {
         release {
             def keystorePath = System.getenv("RELEASE_KEYSTORE_PATH") ?: project.findProperty("RELEASE_KEYSTORE_PATH") ?: 'release-key.keystore'
             def keystorePwd = System.getenv("RELEASE_KEYSTORE_PASSWORD") ?: project.findProperty("RELEASE_KEYSTORE_PASSWORD") ?: 'greedgross2024'
-            def keyAlias = System.getenv("RELEASE_KEY_ALIAS") ?: project.findProperty("RELEASE_KEY_ALIAS") ?: 'greed-gross-key'
+            def keyAliasName = System.getenv("RELEASE_KEY_ALIAS") ?: project.findProperty("RELEASE_KEY_ALIAS") ?: 'greed-gross-key'
 
             storeFile file(keystorePath)
             storePassword keystorePwd
-            keyAlias keyAlias
+            keyAlias keyAliasName
             keyPassword keystorePwd
         }
     }
