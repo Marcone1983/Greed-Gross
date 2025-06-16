@@ -42,6 +42,7 @@ class BreedingChatActivity : AppCompatActivity() {
         isTrialUsed = prefs.getBoolean("trial_used", false)
         
         setupViews()
+        loadSavedChat()
         setupRecyclerView()
         
         // Messaggio di benvenuto
@@ -204,6 +205,43 @@ class BreedingChatActivity : AppCompatActivity() {
         messages.add(message)
         chatAdapter.notifyItemInserted(messages.size - 1)
         recyclerView.scrollToPosition(messages.size - 1)
+        saveChatToPrefs()
+    }
+    
+    private fun saveChatToPrefs() {
+        val chatJson = org.json.JSONArray()
+        messages.forEach { message ->
+            val messageJson = org.json.JSONObject()
+            messageJson.put("text", message.text)
+            messageJson.put("isUser", message.isUser)
+            messageJson.put("timestamp", message.timestamp)
+            chatJson.put(messageJson)
+        }
+        prefs.edit().putString("saved_chat", chatJson.toString()).apply()
+    }
+    
+    private fun loadSavedChat() {
+        val savedChatString = prefs.getString("saved_chat", null)
+        if (savedChatString != null) {
+            try {
+                val chatJson = org.json.JSONArray(savedChatString)
+                for (i in 0 until chatJson.length()) {
+                    val messageJson = chatJson.getJSONObject(i)
+                    val message = ChatMessage(
+                        messageJson.getString("text"),
+                        messageJson.getBoolean("isUser"),
+                        messageJson.getLong("timestamp")
+                    )
+                    messages.add(message)
+                }
+                chatAdapter.notifyDataSetChanged()
+                if (messages.isNotEmpty()) {
+                    recyclerView.scrollToPosition(messages.size - 1)
+                }
+            } catch (e: Exception) {
+                android.util.Log.e("BreedingChat", "Error loading saved chat", e)
+            }
+        }
     }
     
     private fun saveStrain(name: String, strainData: Triple<String, String, String>) {

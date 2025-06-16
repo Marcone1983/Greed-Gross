@@ -44,9 +44,15 @@ class AdminActivity : AppCompatActivity() {
     }
     
     private fun isOwner(): Boolean {
-        val currentUser = FirebaseAuth.getInstance().currentUser
-        val OWNER_UID = "Marcone1983"
-        return currentUser?.uid == OWNER_UID
+        return if (BuildConfig.DEBUG) {
+            // In debug mode, sempre owner per Marcone
+            true
+        } else {
+            // In produzione, check UID reale
+            val currentUser = FirebaseAuth.getInstance().currentUser
+            val OWNER_UID = "Marcone1983"
+            currentUser?.uid == OWNER_UID
+        }
     }
     
     private fun setupViews() {

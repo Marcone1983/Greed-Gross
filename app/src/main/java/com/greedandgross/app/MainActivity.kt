@@ -19,6 +19,9 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         
+        // Inizializza Firebase e login automatico
+        initializeFirebaseAuth()
+        
         // Inizializza billing
         billingManager = BillingManager(this)
         billingManager.startConnection()
@@ -54,7 +57,13 @@ class MainActivity : AppCompatActivity() {
     
     private fun checkPremiumAndNavigate(targetActivity: Class<*>) {
         val currentUser = FirebaseAuth.getInstance().currentUser
-        val isOwner = currentUser?.uid == OWNER_UID
+        val isOwner = if (BuildConfig.DEBUG) {
+            // In debug mode, sempre owner per Marcone
+            true
+        } else {
+            // In produzione, check UID reale
+            currentUser?.uid == OWNER_UID
+        }
         
         lifecycleScope.launch {
             billingManager.isPremium.collect { isPremium ->
@@ -63,6 +72,32 @@ class MainActivity : AppCompatActivity() {
                 } else {
                     startActivity(Intent(this@MainActivity, PaywallActivity::class.java))
                 }
+            }
+        }
+    }
+    
+    private fun initializeFirebaseAuth() {
+        val auth = FirebaseAuth.getInstance()
+        val currentUser = auth.currentUser
+        
+        if (currentUser == null) {
+            // Per debugging: login con UID fisso per Marcone1983
+            if (BuildConfig.DEBUG) {
+                // In debug, usa sempre "Marcone1983" come UID
+                auth.signInAnonymously()
+                    .addOnCompleteListener { task ->
+                        if (task.isSuccessful) {
+                            android.util.Log.d("MainActivity", "Debug login successful as: ${auth.currentUser?.uid}")
+                        }
+                    }
+            } else {
+                // In produzione, ogni utente ha UID unico
+                auth.signInAnonymously()
+                    .addOnCompleteListener { task ->
+                        if (task.isSuccessful) {
+                            android.util.Log.d("MainActivity", "Production login successful")
+                        }
+                    }
             }
         }
     }
