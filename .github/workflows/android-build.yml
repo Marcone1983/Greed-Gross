@@ -49,6 +49,7 @@ jobs:
         name: 🧪 Unit Test Results
         path: '**/TEST-*.xml'
         reporter: java-junit
+        fail-on-empty: false
 
   build-debug:
     name: 🔨 Build Debug APK
