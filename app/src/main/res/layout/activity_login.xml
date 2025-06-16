@@ -120,28 +120,6 @@
 
             </com.google.android.material.textfield.TextInputLayout>
 
-            <!-- Email Field (Register only) -->
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/emailLayout"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:hint="📧 Email"
-                android:visibility="gone"
-                app:hintTextColor="@color/green_secondary"
-                app:boxStrokeColor="@color/green_primary"
-                app:boxBackgroundColor="@color/dark_surface"
-                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
-
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/emailField"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:inputType="textEmailAddress"
-                    android:textColor="@color/white"
-                    android:textColorHint="@color/green_secondary" />
-
-            </com.google.android.material.textfield.TextInputLayout>
 
             <!-- Password Field -->
             <com.google.android.material.textfield.TextInputLayout

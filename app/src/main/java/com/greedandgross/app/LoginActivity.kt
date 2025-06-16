@@ -19,8 +19,6 @@ class LoginActivity : AppCompatActivity() {
     private lateinit var loginTab: Button
     private lateinit var registerTab: Button
     private lateinit var usernameField: TextInputEditText
-    private lateinit var emailLayout: TextInputLayout
-    private lateinit var emailField: TextInputEditText
     private lateinit var passwordField: TextInputEditText
     private lateinit var confirmPasswordLayout: TextInputLayout
     private lateinit var confirmPasswordField: TextInputEditText
@@ -46,8 +44,6 @@ class LoginActivity : AppCompatActivity() {
         loginTab = findViewById(R.id.loginTab)
         registerTab = findViewById(R.id.registerTab)
         usernameField = findViewById(R.id.usernameField)
-        emailLayout = findViewById(R.id.emailLayout)
-        emailField = findViewById(R.id.emailField)
         passwordField = findViewById(R.id.passwordField)
         confirmPasswordLayout = findViewById(R.id.confirmPasswordLayout)
         confirmPasswordField = findViewById(R.id.confirmPasswordField)
@@ -96,7 +92,6 @@ class LoginActivity : AppCompatActivity() {
             registerTab.setBackgroundResource(R.drawable.tab_unselected)
             registerTab.setTextColor(getColor(R.color.green_secondary))
             
-            emailLayout.visibility = View.GONE
             confirmPasswordLayout.visibility = View.GONE
             submitButton.text = "🚀 LOGIN"
             
@@ -108,7 +103,6 @@ class LoginActivity : AppCompatActivity() {
             loginTab.setBackgroundResource(R.drawable.tab_unselected)
             loginTab.setTextColor(getColor(R.color.green_secondary))
             
-            emailLayout.visibility = View.VISIBLE
             confirmPasswordLayout.visibility = View.VISIBLE
             submitButton.text = "🌱 CREATE ACCOUNT"
             
@@ -166,10 +160,9 @@ class LoginActivity : AppCompatActivity() {
         }
         
         if (!isLoginMode) {
-            val email = emailField.text.toString().trim()
             val confirmPassword = confirmPasswordField.text.toString()
             
-            if (email.isEmpty() || confirmPassword.isEmpty()) {
+            if (confirmPassword.isEmpty()) {
                 Toast.makeText(this, "⚠️ Please fill all fields", Toast.LENGTH_SHORT).show()
                 return
             }
