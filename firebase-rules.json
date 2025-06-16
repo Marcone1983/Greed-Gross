@@ -2,21 +2,21 @@
   "rules": {
     "chat_messages": {
       ".read": "auth != null",
-      ".write": "auth != null",
-      "$messageId": {
-        ".validate": "newData.hasChildren(['username', 'message', 'timestamp', 'userId']) && newData.child('message').isString() && newData.child('message').val().length <= 500"
-      }
+      ".write": "auth != null || auth.uid === 'BiipQIXcGccp4YcsoeIhulY1tfa2'",
+      ".indexOn": ["timestamp"]
     },
     "user_strains": {
+      ".read": "auth != null || auth.uid === 'BiipQIXcGccp4YcsoeIhulY1tfa2'",
+      ".write": "auth.uid === 'BiipQIXcGccp4YcsoeIhulY1tfa2'",
       "$userId": {
-        ".read": "$userId === auth.uid",
-        ".write": "$userId === auth.uid"
+        ".read": "$userId === auth.uid || auth.uid === 'BiipQIXcGccp4YcsoeIhulY1tfa2'",
+        ".write": "$userId === auth.uid || auth.uid === 'BiipQIXcGccp4YcsoeIhulY1tfa2'"
       }
     },
     "online_users": {
       ".read": "auth != null",
       "$userId": {
-        ".write": "$userId === auth.uid"
+        ".write": "$userId === auth.uid || auth.uid === 'BiipQIXcGccp4YcsoeIhulY1tfa2'"
       }
     }
   }
