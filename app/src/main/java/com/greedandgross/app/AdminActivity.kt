@@ -45,7 +45,7 @@ class AdminActivity : AppCompatActivity() {
     
     private fun isOwner(): Boolean {
         val currentUser = FirebaseAuth.getInstance().currentUser
-        val OWNER_UID = "Marcone1983" // UID del proprietario
+        val OWNER_UID = "Marcone1983"
         return currentUser?.uid == OWNER_UID
     }
     
