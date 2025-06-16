@@ -35,4 +35,24 @@
     <!-- Chat Colors -->
     <color name="chat_user_background">#2E7D32</color>
     <color name="chat_bot_background">#424242</color>
+    
+    <!-- Status Colors -->
+    <color name="success">#4CAF50</color>
+    <color name="warning">#FF9800</color>
+    <color name="error">#F44336</color>
+    <color name="info">#2196F3</color>
+    
+    <!-- Strain Type Colors -->
+    <color name="indica_color">#9C27B0</color>
+    <color name="sativa_color">#FF5722</color>
+    <color name="hybrid_color">#607D8B</color>
+    
+    <!-- Premium Colors -->
+    <color name="premium_gold">#FFD700</color>
+    <color name="premium_gradient_start">#FFD700</color>
+    <color name="premium_gradient_end">#FFA000</color>
+    
+    <!-- Loading Colors -->
+    <color name="loading_background">#80000000</color>
+    <color name="progress_bar">#4CAF50</color>
 </resources>

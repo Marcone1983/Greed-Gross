@@ -1,4 +1,138 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Greed &amp; Gross</string>
+    
+    <!-- Main Activity -->
+    <string name="main_title">Cannabis Breeding Simulator</string>
+    <string name="main_subtitle">AI-Powered Strain Creation</string>
+    <string name="card_breeding_title">AI Breeding Chat</string>
+    <string name="card_breeding_desc">Create new strains with AI assistance</string>
+    <string name="card_strains_title">Strain Database</string>
+    <string name="card_strains_desc">Explore cannabis genetics</string>
+    <string name="card_history_title">Breeding History</string>
+    <string name="card_history_desc">View your past creations</string>
+    <string name="card_premium_title">Premium Features</string>
+    <string name="card_premium_desc">Unlock advanced breeding tools</string>
+    
+    <!-- Breeding Chat -->
+    <string name="breeding_title">AI Breeding Assistant</string>
+    <string name="breeding_subtitle">Cross strains and create new genetics</string>
+    <string name="hint_enter_message">Enter your breeding question...</string>
+    <string name="btn_send">Send</string>
+    <string name="btn_clear">Clear Chat</string>
+    <string name="btn_save">Save Result</string>
+    <string name="loading_ai_response">AI is thinking...</string>
+    <string name="error_api_key">API key not configured</string>
+    <string name="error_network">Network error occurred</string>
+    <string name="error_generic">Something went wrong</string>
+    <string name="success_saved">Breeding result saved!</string>
+    
+    <!-- Strain Database -->
+    <string name="strains_title">Strain Database</string>
+    <string name="strains_subtitle">Explore cannabis genetics</string>
+    <string name="search_strains">Search strains...</string>
+    <string name="filter_all">All</string>
+    <string name="filter_indica">Indica</string>
+    <string name="filter_sativa">Sativa</string>
+    <string name="filter_hybrid">Hybrid</string>
+    <string name="thc_label">THC:</string>
+    <string name="cbd_label">CBD:</string>
+    <string name="genetics_label">Genetics:</string>
+    <string name="effects_label">Effects:</string>
+    <string name="difficulty_label">Difficulty:</string>
+    
+    <!-- Premium -->
+    <string name="premium_title">Premium Features</string>
+    <string name="premium_subtitle">Unlock advanced breeding tools</string>
+    <string name="premium_monthly">Monthly Premium</string>
+    <string name="premium_price">€0.99/month</string>
+    <string name="premium_features">• Unlimited AI breeding sessions\n• Advanced strain analysis\n• Custom breeding projects\n• Export breeding results\n• Priority support</string>
+    <string name="btn_upgrade">Upgrade to Premium</string>
+    <string name="already_premium">You have Premium access!</string>
+    
+    <!-- History -->
+    <string name="history_title">Breeding History</string>
+    <string name="history_subtitle">Your past breeding sessions</string>
+    <string name="history_empty">No breeding history yet</string>
+    <string name="history_item_parents">Parents: %1$s × %2$s</string>
+    <string name="history_item_result">Result: %1$s</string>
+    <string name="history_item_date">Created: %1$s</string>
+    
+    <!-- Settings -->
+    <string name="settings_title">Settings</string>
+    <string name="settings_account">Account</string>
+    <string name="settings_notifications">Notifications</string>
+    <string name="settings_privacy">Privacy</string>
+    <string name="settings_about">About</string>
+    <string name="settings_logout">Logout</string>
+    
+    <!-- Authentication -->
+    <string name="auth_title">Welcome to Greed &amp; Gross</string>
+    <string name="auth_subtitle">Sign in to save your breeding results</string>
+    <string name="btn_sign_in">Sign In with Google</string>
+    <string name="btn_continue_guest">Continue as Guest</string>
+    <string name="auth_age_warning">This app is for users 18+ only</string>
+    <string name="auth_legal_notice">For educational purposes only</string>
+    
+    <!-- Dialogs -->
+    <string name="dialog_confirm">Confirm</string>
+    <string name="dialog_cancel">Cancel</string>
+    <string name="dialog_ok">OK</string>
+    <string name="dialog_clear_chat_title">Clear Chat</string>
+    <string name="dialog_clear_chat_message">Are you sure you want to clear the chat history?</string>
+    <string name="dialog_logout_title">Logout</string>
+    <string name="dialog_logout_message">Are you sure you want to logout?</string>
+    
+    <!-- Errors -->
+    <string name="error_internet">No internet connection</string>
+    <string name="error_server">Server error, please try again</string>
+    <string name="error_timeout">Request timeout</string>
+    <string name="error_unknown">Unknown error occurred</string>
+    <string name="error_authentication">Authentication failed</string>
+    <string name="error_permission">Permission denied</string>
+    
+    <!-- Loading -->
+    <string name="loading">Loading...</string>
+    <string name="loading_strains">Loading strains...</string>
+    <string name="loading_history">Loading history...</string>
+    <string name="loading_breeding">Processing breeding...</string>
+    
+    <!-- Misc -->
+    <string name="age_18_plus">18+</string>
+    <string name="educational_only">Educational Only</string>
+    <string name="version">Version %1$s</string>
+    <string name="developer">Developed by Marcone1983</string>
+    <string name="copyright">© 2025 Greed &amp; Gross</string>
+    
+    <!-- Breeding Examples -->
+    <string name="example_breeding_1">Cross White Widow with Blue Dream</string>
+    <string name="example_breeding_2">What happens if I breed OG Kush with Sour Diesel?</string>
+    <string name="example_breeding_3">Create a high CBD strain for medical use</string>
+    <string name="example_breeding_4">Breed for maximum THC content</string>
+    
+    <!-- Strain Types -->
+    <string name="strain_indica">Indica</string>
+    <string name="strain_sativa">Sativa</string>
+    <string name="strain_hybrid">Hybrid</string>
+    <string name="strain_unknown">Unknown</string>
+    
+    <!-- Difficulties -->
+    <string name="difficulty_easy">Easy</string>
+    <string name="difficulty_medium">Medium</string>
+    <string name="difficulty_hard">Hard</string>
+    
+    <!-- Navigation -->
+    <string name="nav_home">Home</string>
+    <string name="nav_breeding">Breeding</string>
+    <string name="nav_strains">Strains</string>
+    <string name="nav_history">History</string>
+    <string name="nav_settings">Settings</string>
+    
+    <!-- Accessibility -->
+    <string name="cd_strain_image">Strain image</string>
+    <string name="cd_breeding_result">Breeding result</string>
+    <string name="cd_send_message">Send message</string>
+    <string name="cd_clear_chat">Clear chat</string>
+    <string name="cd_back">Back</string>
+    <string name="cd_menu">Menu</string>
 </resources>
