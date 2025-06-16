@@ -41,6 +41,8 @@ jobs:
         
     - name: 🧪 Run Tests
       run: ./gradlew testDevDebugUnitTest --stacktrace
+      env:
+        OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
 
   build-debug:
     name: 🔨 Build Debug APK

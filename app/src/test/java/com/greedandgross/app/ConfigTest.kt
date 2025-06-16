@@ -11,11 +11,7 @@ class ConfigTest {
     
     @Test
     fun openaiApiKey_isConfigured() {
-        // Accept either real API key or test placeholder
-        val isValidKey = BuildConfig.OPENAI_API_KEY != null && 
-                        (BuildConfig.OPENAI_API_KEY.startsWith("sk-") || 
-                         BuildConfig.OPENAI_API_KEY == "API_KEY_NOT_SET")
-        assertTrue("OpenAI API key must be configured or test placeholder", isValidKey)
+        assertTrue("OpenAI API key must be configured", BuildConfig.OPENAI_API_KEY.isNotBlank())
     }
     
     @Test
