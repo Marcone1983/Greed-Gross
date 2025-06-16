@@ -1,6 +1,20 @@
 {
   "rules": {
-    ".read": "auth != null",
-    ".write": "auth != null"
+    "chat_messages": {
+      ".read": "auth != null",
+      ".write": "auth != null"
+    },
+    "user_strains": {
+      "$userId": {
+        ".read": "$userId === auth.uid",
+        ".write": "$userId === auth.uid"
+      }
+    },
+    "online_users": {
+      ".read": "auth != null",
+      "$userId": {
+        ".write": "$userId === auth.uid"
+      }
+    }
   }
 }
