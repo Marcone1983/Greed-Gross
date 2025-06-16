@@ -78,6 +78,16 @@ class GlobalChatActivity : AppCompatActivity() {
         
         android.util.Log.d("GlobalChat", "Starting Firebase auth...")
         
+        if (BuildConfig.DEBUG) {
+            // In debug, simula connessione riuscita
+            currentUserName = generateRandomUsername()
+            addSystemMessage("✅ [DEBUG] Connesso come $currentUserName")
+            addSystemMessage("⚠️ Chat offline - Firebase rules restrictive")
+            addSystemMessage("🔧 Configura regole: global_chat: .read/.write = auth != null")
+            loadingIndicator.visibility = View.GONE
+            return
+        }
+        
         auth.signInAnonymously()
             .addOnCompleteListener(this) { task ->
                 android.util.Log.d("GlobalChat", "Auth complete: ${task.isSuccessful}")
@@ -91,8 +101,9 @@ class GlobalChatActivity : AppCompatActivity() {
                     addSystemMessage(LanguageManager.getString("chat_welcome"))
                 } else {
                     val error = task.exception?.message ?: "Errore sconosciuto"
+                    android.util.Log.e("GlobalChat", "Auth failed: $error", task.exception)
                     addSystemMessage("❌ Errore autenticazione: $error")
-                    android.util.Log.e("GlobalChat", "Auth failed", task.exception)
+                    addSystemMessage("🔧 Verifica regole Firebase Database")
                 }
                 loadingIndicator.visibility = View.GONE
             }
