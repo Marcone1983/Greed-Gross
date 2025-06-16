@@ -82,7 +82,7 @@ class ApiClient {
                     })
                 })
                 put("max_tokens", 1000)
-                put("temperature", 0.7)
+                put("temperature", 0.3)
             }
             
             val request = Request.Builder()
@@ -186,7 +186,7 @@ class ApiClient {
                     })
                 })
                 put("max_tokens", 1000)
-                put("temperature", 0.7)
+                put("temperature", 0.3)
             }
             
             val request = Request.Builder()
