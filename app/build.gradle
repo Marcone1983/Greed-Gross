@@ -47,14 +47,14 @@ android {
     buildTypes {
         debug {
             debuggable true
-            buildConfigField "String", "OPENAI_API_KEY", "\"${System.getenv('OPENAI_API_KEY') ?: project.findProperty('openai.api.key') ?: 'API_KEY_NOT_SET'}\""
+            buildConfigField "String", "OPENAI_API_KEY", "\"${System.getenv('OPENAI_API_KEY')}\""
         }
         release {
             minifyEnabled true
             shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.release
-            buildConfigField "String", "OPENAI_API_KEY", "\"${System.getenv('OPENAI_API_KEY') ?: project.findProperty('openai.api.key') ?: 'API_KEY_NOT_SET'}\""
+            buildConfigField "String", "OPENAI_API_KEY", "\"${System.getenv('OPENAI_API_KEY')}\""
         }
     }
     
