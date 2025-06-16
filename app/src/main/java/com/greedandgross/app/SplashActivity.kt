@@ -11,6 +11,7 @@ import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import com.greedandgross.app.BuildConfig
 
 class SplashActivity : AppCompatActivity() {
     
