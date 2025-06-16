@@ -23,9 +23,9 @@ android {
     signingConfigs {
         release {
             storeFile file('release-key.keystore')
-            storePassword System.getenv("RELEASE_KEYSTORE_PASSWORD") ?: 'greedgross123'
-            keyAlias System.getenv("RELEASE_KEY_ALIAS") ?: 'greed-gross-key' 
-            keyPassword System.getenv("RELEASE_KEY_PASSWORD") ?: 'greedgross123'
+            storePassword System.getenv("KEYSTORE_PASSWORD") ?: 'android123'
+            keyAlias System.getenv("KEY_ALIAS") ?: 'release' 
+            keyPassword System.getenv("KEY_PASSWORD") ?: 'android123'
         }
     }
     
