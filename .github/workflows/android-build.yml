@@ -41,15 +41,6 @@ jobs:
         
     - name: 🧪 Run Tests
       run: ./gradlew testDevDebugUnitTest --stacktrace
-      
-    - name: 📊 Test Report
-      uses: dorny/test-reporter@v1
-      if: success() || failure()
-      with:
-        name: 🧪 Unit Test Results
-        path: '**/TEST-*.xml'
-        reporter: java-junit
-        fail-on-empty: false
 
   build-debug:
     name: 🔨 Build Debug APK
