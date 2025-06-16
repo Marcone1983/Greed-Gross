@@ -1,5 +1,7 @@
 {
   "rules": {
+    ".read": "auth != null",
+    ".write": "auth != null",
     "chat_messages": {
       ".read": "auth != null",
       ".write": "auth != null",
@@ -9,14 +11,17 @@
     },
     "online_users": {
       ".read": "auth != null",
+      ".write": "auth != null",
       "$userId": {
-        ".write": "$userId === auth.uid"
+        ".write": "auth != null"
       }
     },
     "user_strains": {
+      ".read": "auth != null",
+      ".write": "auth != null",
       "$userId": {
-        ".read": "$userId === auth.uid",
-        ".write": "$userId === auth.uid"
+        ".read": "auth != null",
+        ".write": "auth != null"
       }
     }
   }
