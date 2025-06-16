@@ -92,8 +92,13 @@ class GlobalChatActivity : AppCompatActivity() {
             .addOnCompleteListener(this) { task ->
                 android.util.Log.d("GlobalChat", "Auth complete: ${task.isSuccessful}")
                 if (task.isSuccessful) {
+                    val user = auth.currentUser
+                    android.util.Log.d("GlobalChat", "User UID: ${user?.uid}")
+                    
                     currentUserName = generateRandomUsername()
                     addSystemMessage("✅ Connesso come $currentUserName")
+                    addSystemMessage("🔧 UID: ${user?.uid}")
+                    
                     setupChatListener()
                     addUserToOnlineList()
                     
@@ -104,6 +109,7 @@ class GlobalChatActivity : AppCompatActivity() {
                     android.util.Log.e("GlobalChat", "Auth failed: $error", task.exception)
                     addSystemMessage("❌ Errore autenticazione: $error")
                     addSystemMessage("🔧 Verifica regole Firebase Database")
+                    addSystemMessage("📋 Rules needed: global_chat: .read/.write = auth != null")
                 }
                 loadingIndicator.visibility = View.GONE
             }
