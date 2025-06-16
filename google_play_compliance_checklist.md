@@ -105,9 +105,11 @@ This app is for EDUCATIONAL PURPOSES ONLY. Users must comply with all applicable
 ## 📞 Support Infrastructure
 
 ### Required Contact Information
-- **Support email:** support@greedgross.com
-- **Privacy contact:** privacy@greedgross.com  
-- **Legal issues:** legal@greedgross.com
+- **Developer:** Roberto Romagnino
+- **Company:** Growverse, LLC
+- **Address:** 8 The Green, Suite A, Dover, Delaware 19901, USA
+- **Support email:** greedgross@gmail.com
+- **Phone:** +39 349 137 1384
 - **Developer website:** (To be created)
 
 ### Post-Launch Monitoring
