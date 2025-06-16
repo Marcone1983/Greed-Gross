@@ -1,23 +1,6 @@
 {
   "rules": {
-    "chat_messages": {
-      ".read": "auth != null",
-      ".write": "auth != null && newData.child('userId').val() == auth.uid",
-      "$messageId": {
-        ".validate": "newData.hasChildren(['username', 'message', 'timestamp', 'userId']) && newData.child('message').val().length <= 500"
-      }
-    },
-    "user_strains": {
-      "$userId": {
-        ".read": "$userId === auth.uid",
-        ".write": "$userId === auth.uid && newData.child('createdBy').val() == auth.uid"
-      }
-    },
-    "online_users": {
-      "$userId": {
-        ".read": "auth != null",
-        ".write": "$userId === auth.uid"
-      }
-    }
+    ".read": "auth != null",
+    ".write": "auth != null"
   }
 }
