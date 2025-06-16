@@ -205,7 +205,7 @@
                 android:id="@+id/deleteAccountLink"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="🗑️ Delete Account & Data (GDPR)"
+                android:text="🗑️ Delete Account &amp; Data (GDPR)"
                 android:textColor="@color/error"
                 android:textSize="14sp"
                 android:padding="8dp"
