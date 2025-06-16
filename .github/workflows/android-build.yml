@@ -86,9 +86,9 @@ jobs:
       env:
         JAVA_OPTS: "-Djdk.util.jar.enableMultiRelease=false"
         OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
-        RELEASE_KEYSTORE_PASSWORD: ${{ secrets.RELEASE_KEYSTORE_PASSWORD }}
-        RELEASE_KEY_ALIAS: ${{ secrets.RELEASE_KEY_ALIAS }}
-        RELEASE_KEY_PASSWORD: ${{ secrets.RELEASE_KEY_PASSWORD }}
+        KEYSTORE_PASSWORD: ${{ secrets.KEYSTORE_PASSWORD }}
+        KEY_ALIAS: ${{ secrets.KEY_ALIAS }}
+        KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
         API_BASE_URL_PROD: ${{ secrets.API_BASE_URL_PROD }}
         
     - name: 📤 Upload Release APK
