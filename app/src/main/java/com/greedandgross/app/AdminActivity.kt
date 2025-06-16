@@ -8,6 +8,7 @@ import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import org.json.JSONObject
 import java.io.File
@@ -43,8 +44,9 @@ class AdminActivity : AppCompatActivity() {
     }
     
     private fun isOwner(): Boolean {
-        // Triple check proprietario
-        return true // Marcone1983 sempre admin
+        val currentUser = FirebaseAuth.getInstance().currentUser
+        val OWNER_UID = "Marcone1983" // UID del proprietario
+        return currentUser?.uid == OWNER_UID
     }
     
     private fun setupViews() {

@@ -20,7 +20,7 @@ class BillingManager(private val context: Context) : PurchasesUpdatedListener {
     val connectionState: StateFlow<Int> = _connectionState
     
     companion object {
-        const val PREMIUM_SUBSCRIPTION_ID = "premium_monthly_0_99"
+        const val PREMIUM_SUBSCRIPTION_ID = "premium_monthly_14_99"
         const val PREMIUM_SUBSCRIPTION_OFFER_ID = "monthly-offer"
     }
     

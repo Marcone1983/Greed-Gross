@@ -5,12 +5,23 @@ import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.cardview.widget.CardView
+import androidx.lifecycle.lifecycleScope
+import com.google.firebase.auth.FirebaseAuth
+import com.greedandgross.app.billing.BillingManager
+import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
+    
+    private lateinit var billingManager: BillingManager
+    private val OWNER_UID = "Marcone1983" // UID del proprietario
     
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        
+        // Inizializza billing
+        billingManager = BillingManager(this)
+        billingManager.startConnection()
         
         setupClickListeners()
     }
@@ -24,14 +35,7 @@ class MainActivity : AppCompatActivity() {
         
         findViewById<CardView>(R.id.cardGlobalChat).setOnClickListener {
             animateCardClick(it) {
-                // BYPASS PROPRIETARIO: Tu puoi sempre accedere!
-                val isOwner = true // Marcone1983 sempre premium
-                
-                if (isOwner) {
-                    startActivity(Intent(this, GlobalChatActivity::class.java))
-                } else {
-                    startActivity(Intent(this, PaywallActivity::class.java))
-                }
+                checkPremiumAndNavigate(GlobalChatActivity::class.java)
             }
         }
         
@@ -43,13 +47,21 @@ class MainActivity : AppCompatActivity() {
         
         findViewById<CardView>(R.id.cardSettings).setOnClickListener {
             animateCardClick(it) {
-                // BYPASS PROPRIETARIO: Tu puoi sempre accedere alle impostazioni!
-                val isOwner = true // Marcone1983 sempre premium
-                
-                if (isOwner) {
-                    startActivity(Intent(this, SettingsActivity::class.java))
+                checkPremiumAndNavigate(SettingsActivity::class.java)
+            }
+        }
+    }
+    
+    private fun checkPremiumAndNavigate(targetActivity: Class<*>) {
+        val currentUser = FirebaseAuth.getInstance().currentUser
+        val isOwner = currentUser?.uid == OWNER_UID
+        
+        lifecycleScope.launch {
+            billingManager.isPremium.collect { isPremium ->
+                if (isOwner || isPremium) {
+                    startActivity(Intent(this@MainActivity, targetActivity))
                 } else {
-                    startActivity(Intent(this, PaywallActivity::class.java))
+                    startActivity(Intent(this@MainActivity, PaywallActivity::class.java))
                 }
             }
         }
