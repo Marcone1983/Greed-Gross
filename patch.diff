@@ -1,0 +1,927 @@
+diff --git a/app/src/main/res/values/colors.xml b/app/src/main/res/values/colors.xml
+index 79fddf4..f19d85d 100644
+--- a/app/src/main/res/values/colors.xml
++++ b/app/src/main/res/values/colors.xml
+@@ -35,4 +35,24 @@
+     <!-- Chat Colors -->
+     <color name="chat_user_background">#2E7D32</color>
+     <color name="chat_bot_background">#424242</color>
++    
++    <!-- Status Colors -->
++    <color name="success">#4CAF50</color>
++    <color name="warning">#FF9800</color>
++    <color name="error">#F44336</color>
++    <color name="info">#2196F3</color>
++    
++    <!-- Strain Type Colors -->
++    <color name="indica_color">#9C27B0</color>
++    <color name="sativa_color">#FF5722</color>
++    <color name="hybrid_color">#607D8B</color>
++    
++    <!-- Premium Colors -->
++    <color name="premium_gold">#FFD700</color>
++    <color name="premium_gradient_start">#FFD700</color>
++    <color name="premium_gradient_end">#FFA000</color>
++    
++    <!-- Loading Colors -->
++    <color name="loading_background">#80000000</color>
++    <color name="progress_bar">#4CAF50</color>
+ </resources>
+\ No newline at end of file
+diff --git a/app/src/main/res/values/dimens.xml b/app/src/main/res/values/dimens.xml
+new file mode 100644
+index 0000000..26d094a
+--- /dev/null
++++ b/app/src/main/res/values/dimens.xml
+@@ -0,0 +1,61 @@
++<?xml version="1.0" encoding="utf-8"?>
++<resources>
++    <!-- Standard Margins -->
++    <dimen name="margin_small">8dp</dimen>
++    <dimen name="margin_medium">16dp</dimen>
++    <dimen name="margin_large">24dp</dimen>
++    <dimen name="margin_xlarge">32dp</dimen>
++    
++    <!-- Padding -->
++    <dimen name="padding_small">8dp</dimen>
++    <dimen name="padding_medium">16dp</dimen>
++    <dimen name="padding_large">24dp</dimen>
++    
++    <!-- Card Dimensions -->
++    <dimen name="card_margin">12dp</dimen>
++    <dimen name="card_padding">16dp</dimen>
++    <dimen name="card_elevation">4dp</dimen>
++    <dimen name="card_corner_radius">12dp</dimen>
++    
++    <!-- Button Dimensions -->
++    <dimen name="button_height">48dp</dimen>
++    <dimen name="button_corner_radius">24dp</dimen>
++    <dimen name="fab_margin">16dp</dimen>
++    
++    <!-- Chat Dimensions -->
++    <dimen name="chat_message_margin">8dp</dimen>
++    <dimen name="chat_message_padding">12dp</dimen>
++    <dimen name="chat_message_radius">18dp</dimen>
++    <dimen name="chat_input_height">56dp</dimen>
++    
++    <!-- Image Dimensions -->
++    <dimen name="strain_image_size">80dp</dimen>
++    <dimen name="card_image_height">120dp</dimen>
++    <dimen name="avatar_size">40dp</dimen>
++    
++    <!-- Text Sizes -->
++    <dimen name="text_size_small">12sp</dimen>
++    <dimen name="text_size_medium">14sp</dimen>
++    <dimen name="text_size_large">16sp</dimen>
++    <dimen name="text_size_xlarge">18sp</dimen>
++    <dimen name="text_size_title">20sp</dimen>
++    <dimen name="text_size_headline">24sp</dimen>
++    
++    <!-- List Item Dimensions -->
++    <dimen name="list_item_height">72dp</dimen>
++    <dimen name="list_item_padding">16dp</dimen>
++    
++    <!-- Loading Indicator -->
++    <dimen name="progress_size">48dp</dimen>
++    <dimen name="progress_stroke_width">4dp</dimen>
++    
++    <!-- Navigation -->
++    <dimen name="toolbar_height">56dp</dimen>
++    <dimen name="bottom_nav_height">56dp</dimen>
++    
++    <!-- Premium Badge -->
++    <dimen name="premium_badge_size">24dp</dimen>
++    
++    <!-- Divider -->
++    <dimen name="divider_height">1dp</dimen>
++</resources>
+\ No newline at end of file
+diff --git a/app/src/main/res/values/strings.xml b/app/src/main/res/values/strings.xml
+index 97a1320..b53a1b7 100644
+--- a/app/src/main/res/values/strings.xml
++++ b/app/src/main/res/values/strings.xml
+@@ -1,4 +1,138 @@
+ <?xml version="1.0" encoding="utf-8"?>
+ <resources>
+     <string name="app_name">Greed &amp; Gross</string>
++    
++    <!-- Main Activity -->
++    <string name="main_title">Cannabis Breeding Simulator</string>
++    <string name="main_subtitle">AI-Powered Strain Creation</string>
++    <string name="card_breeding_title">AI Breeding Chat</string>
++    <string name="card_breeding_desc">Create new strains with AI assistance</string>
++    <string name="card_strains_title">Strain Database</string>
++    <string name="card_strains_desc">Explore cannabis genetics</string>
++    <string name="card_history_title">Breeding History</string>
++    <string name="card_history_desc">View your past creations</string>
++    <string name="card_premium_title">Premium Features</string>
++    <string name="card_premium_desc">Unlock advanced breeding tools</string>
++    
++    <!-- Breeding Chat -->
++    <string name="breeding_title">AI Breeding Assistant</string>
++    <string name="breeding_subtitle">Cross strains and create new genetics</string>
++    <string name="hint_enter_message">Enter your breeding question...</string>
++    <string name="btn_send">Send</string>
++    <string name="btn_clear">Clear Chat</string>
++    <string name="btn_save">Save Result</string>
++    <string name="loading_ai_response">AI is thinking...</string>
++    <string name="error_api_key">API key not configured</string>
++    <string name="error_network">Network error occurred</string>
++    <string name="error_generic">Something went wrong</string>
++    <string name="success_saved">Breeding result saved!</string>
++    
++    <!-- Strain Database -->
++    <string name="strains_title">Strain Database</string>
++    <string name="strains_subtitle">Explore cannabis genetics</string>
++    <string name="search_strains">Search strains...</string>
++    <string name="filter_all">All</string>
++    <string name="filter_indica">Indica</string>
++    <string name="filter_sativa">Sativa</string>
++    <string name="filter_hybrid">Hybrid</string>
++    <string name="thc_label">THC:</string>
++    <string name="cbd_label">CBD:</string>
++    <string name="genetics_label">Genetics:</string>
++    <string name="effects_label">Effects:</string>
++    <string name="difficulty_label">Difficulty:</string>
++    
++    <!-- Premium -->
++    <string name="premium_title">Premium Features</string>
++    <string name="premium_subtitle">Unlock advanced breeding tools</string>
++    <string name="premium_monthly">Monthly Premium</string>
++    <string name="premium_price">€0.99/month</string>
++    <string name="premium_features">• Unlimited AI breeding sessions\n• Advanced strain analysis\n• Custom breeding projects\n• Export breeding results\n• Priority support</string>
++    <string name="btn_upgrade">Upgrade to Premium</string>
++    <string name="already_premium">You have Premium access!</string>
++    
++    <!-- History -->
++    <string name="history_title">Breeding History</string>
++    <string name="history_subtitle">Your past breeding sessions</string>
++    <string name="history_empty">No breeding history yet</string>
++    <string name="history_item_parents">Parents: %1$s × %2$s</string>
++    <string name="history_item_result">Result: %1$s</string>
++    <string name="history_item_date">Created: %1$s</string>
++    
++    <!-- Settings -->
++    <string name="settings_title">Settings</string>
++    <string name="settings_account">Account</string>
++    <string name="settings_notifications">Notifications</string>
++    <string name="settings_privacy">Privacy</string>
++    <string name="settings_about">About</string>
++    <string name="settings_logout">Logout</string>
++    
++    <!-- Authentication -->
++    <string name="auth_title">Welcome to Greed &amp; Gross</string>
++    <string name="auth_subtitle">Sign in to save your breeding results</string>
++    <string name="btn_sign_in">Sign In with Google</string>
++    <string name="btn_continue_guest">Continue as Guest</string>
++    <string name="auth_age_warning">This app is for users 18+ only</string>
++    <string name="auth_legal_notice">For educational purposes only</string>
++    
++    <!-- Dialogs -->
++    <string name="dialog_confirm">Confirm</string>
++    <string name="dialog_cancel">Cancel</string>
++    <string name="dialog_ok">OK</string>
++    <string name="dialog_clear_chat_title">Clear Chat</string>
++    <string name="dialog_clear_chat_message">Are you sure you want to clear the chat history?</string>
++    <string name="dialog_logout_title">Logout</string>
++    <string name="dialog_logout_message">Are you sure you want to logout?</string>
++    
++    <!-- Errors -->
++    <string name="error_internet">No internet connection</string>
++    <string name="error_server">Server error, please try again</string>
++    <string name="error_timeout">Request timeout</string>
++    <string name="error_unknown">Unknown error occurred</string>
++    <string name="error_authentication">Authentication failed</string>
++    <string name="error_permission">Permission denied</string>
++    
++    <!-- Loading -->
++    <string name="loading">Loading...</string>
++    <string name="loading_strains">Loading strains...</string>
++    <string name="loading_history">Loading history...</string>
++    <string name="loading_breeding">Processing breeding...</string>
++    
++    <!-- Misc -->
++    <string name="age_18_plus">18+</string>
++    <string name="educational_only">Educational Only</string>
++    <string name="version">Version %1$s</string>
++    <string name="developer">Developed by Marcone1983</string>
++    <string name="copyright">© 2025 Greed &amp; Gross</string>
++    
++    <!-- Breeding Examples -->
++    <string name="example_breeding_1">Cross White Widow with Blue Dream</string>
++    <string name="example_breeding_2">What happens if I breed OG Kush with Sour Diesel?</string>
++    <string name="example_breeding_3">Create a high CBD strain for medical use</string>
++    <string name="example_breeding_4">Breed for maximum THC content</string>
++    
++    <!-- Strain Types -->
++    <string name="strain_indica">Indica</string>
++    <string name="strain_sativa">Sativa</string>
++    <string name="strain_hybrid">Hybrid</string>
++    <string name="strain_unknown">Unknown</string>
++    
++    <!-- Difficulties -->
++    <string name="difficulty_easy">Easy</string>
++    <string name="difficulty_medium">Medium</string>
++    <string name="difficulty_hard">Hard</string>
++    
++    <!-- Navigation -->
++    <string name="nav_home">Home</string>
++    <string name="nav_breeding">Breeding</string>
++    <string name="nav_strains">Strains</string>
++    <string name="nav_history">History</string>
++    <string name="nav_settings">Settings</string>
++    
++    <!-- Accessibility -->
++    <string name="cd_strain_image">Strain image</string>
++    <string name="cd_breeding_result">Breeding result</string>
++    <string name="cd_send_message">Send message</string>
++    <string name="cd_clear_chat">Clear chat</string>
++    <string name="cd_back">Back</string>
++    <string name="cd_menu">Menu</string>
+ </resources>
+\ No newline at end of file
+diff --git a/backend/.env.example b/backend/.env.example
+new file mode 100644
+index 0000000..cabdfca
+--- /dev/null
++++ b/backend/.env.example
+@@ -0,0 +1,35 @@
++# Server Configuration
++PORT=3000
++NODE_ENV=development
++
++# Database
++MONGODB_URI=mongodb://localhost:27017/greed-gross
++
++# Security
++JWT_SECRET=your-super-secret-jwt-key-here
++BCRYPT_ROUNDS=12
++
++# CORS
++ALLOWED_ORIGINS=http://localhost:3000,https://your-frontend-domain.com
++
++# OpenAI (for server-side AI calls)
++OPENAI_API_KEY=your-openai-api-key-here
++
++# Firebase Admin (for server-side authentication)
++FIREBASE_PROJECT_ID=greed-gross
++FIREBASE_PRIVATE_KEY_ID=your-firebase-private-key-id
++FIREBASE_PRIVATE_KEY=your-firebase-private-key
++FIREBASE_CLIENT_EMAIL=your-service-account-email
++FIREBASE_CLIENT_ID=your-firebase-client-id
++
++# Rate Limiting
++RATE_LIMIT_WINDOW_MS=900000
++RATE_LIMIT_MAX_REQUESTS=100
++
++# File Upload
++MAX_FILE_SIZE=10485760
++UPLOAD_PATH=./uploads
++
++# Logging
++LOG_LEVEL=info
++LOG_FILE=./logs/app.log
+\ No newline at end of file
+diff --git a/backend/README.md b/backend/README.md
+new file mode 100644
+index 0000000..7146f83
+--- /dev/null
++++ b/backend/README.md
+@@ -0,0 +1,128 @@
++# Greed & Gross Backend Server
++
++Backend API server for the Greed & Gross cannabis breeding simulation app.
++
++## Features
++
++- RESTful API for strain management
++- User breeding history tracking
++- MongoDB integration
++- Rate limiting and security
++- OpenAI API proxy (optional)
++- Firebase authentication support
++- Analytics endpoints
++
++## Setup
++
++1. Install dependencies:
++```bash
++npm install
++```
++
++2. Copy environment variables:
++```bash
++cp .env.example .env
++```
++
++3. Configure your environment variables in `.env`
++
++4. Start MongoDB (if running locally):
++```bash
++mongod
++```
++
++5. Run the server:
++```bash
++# Development
++npm run dev
++
++# Production
++npm start
++```
++
++## API Endpoints
++
++### Health
++- `GET /health` - Health check
++
++### Strains
++- `GET /api/strains` - Get all strains (with pagination and filters)
++- `GET /api/strains/:id` - Get strain by ID
++- `POST /api/strains` - Create new strain (admin only)
++
++### Breeding
++- `POST /api/breeding/save` - Save breeding result
++- `GET /api/breeding/history/:userId` - Get user's breeding history
++
++### Analytics
++- `GET /api/analytics/popular-strains` - Get most popular strains
++
++## Database Schema
++
++### Strain
++```javascript
++{
++  name: String,
++  genetics: String,
++  thc: Number (0-35),
++  cbd: Number (0-25),
++  indica: Number (0-100),
++  sativa: Number (0-100),
++  effects: [String],
++  flavors: [String],
++  difficulty: String,
++  flowering_time: String,
++  yield: String,
++  description: String,
++  image_url: String,
++  breeder: String
++}
++```
++
++### Breeding History
++```javascript
++{
++  user_id: String,
++  parent1: String,
++  parent2: String,
++  result_strain: String,
++  ai_response: String,
++  image_url: String,
++  created_at: Date
++}
++```
++
++## Security Features
++
++- Helmet.js for security headers
++- CORS configuration
++- Rate limiting (100 requests per 15 minutes)
++- Input validation with express-validator
++- Compression middleware
++- Request logging with Morgan
++
++## Environment Variables
++
++See `.env.example` for all required environment variables.
++
++## Docker Support
++
++```dockerfile
++FROM node:18-alpine
++WORKDIR /app
++COPY package*.json ./
++RUN npm ci --only=production
++COPY . .
++EXPOSE 3000
++CMD ["npm", "start"]
++```
++
++## Testing
++
++```bash
++npm test
++```
++
++## License
++
++ISC - Copyright (c) 2025 Marcone1983
+\ No newline at end of file
+diff --git a/backend/models/Strain.js b/backend/models/Strain.js
+new file mode 100644
+index 0000000..38a54e6
+--- /dev/null
++++ b/backend/models/Strain.js
+@@ -0,0 +1,182 @@
++const mongoose = require('mongoose');
++
++const strainSchema = new mongoose.Schema({
++  name: {
++    type: String,
++    required: [true, 'Strain name is required'],
++    unique: true,
++    trim: true,
++    maxlength: [100, 'Strain name cannot exceed 100 characters']
++  },
++  genetics: {
++    type: String,
++    required: [true, 'Genetics information is required'],
++    trim: true,
++    maxlength: [200, 'Genetics cannot exceed 200 characters']
++  },
++  thc: {
++    type: Number,
++    min: [0, 'THC cannot be negative'],
++    max: [35, 'THC cannot exceed 35%'],
++    default: 0
++  },
++  cbd: {
++    type: Number,
++    min: [0, 'CBD cannot be negative'],
++    max: [25, 'CBD cannot exceed 25%'],
++    default: 0
++  },
++  indica: {
++    type: Number,
++    min: [0, 'Indica percentage cannot be negative'],
++    max: [100, 'Indica percentage cannot exceed 100%'],
++    default: 50
++  },
++  sativa: {
++    type: Number,
++    min: [0, 'Sativa percentage cannot be negative'],
++    max: [100, 'Sativa percentage cannot exceed 100%'],
++    default: 50
++  },
++  effects: [{
++    type: String,
++    trim: true,
++    enum: [
++      'Relaxed', 'Happy', 'Euphoric', 'Uplifted', 'Creative',
++      'Focused', 'Energetic', 'Sleepy', 'Hungry', 'Giggly',
++      'Talkative', 'Aroused', 'Tingly', 'Pain Relief', 'Anti-anxiety'
++    ]
++  }],
++  flavors: [{
++    type: String,
++    trim: true,
++    enum: [
++      'Earthy', 'Sweet', 'Citrus', 'Pine', 'Woody', 'Diesel',
++      'Skunk', 'Spicy', 'Herbal', 'Flowery', 'Berry', 'Fruity',
++      'Mint', 'Tropical', 'Vanilla', 'Coffee', 'Chocolate', 'Cheese'
++    ]
++  }],
++  difficulty: {
++    type: String,
++    enum: {
++      values: ['Easy', 'Medium', 'Hard'],
++      message: 'Difficulty must be Easy, Medium, or Hard'
++    },
++    default: 'Medium'
++  },
++  flowering_time: {
++    type: String,
++    trim: true,
++    validate: {
++      validator: function(v) {
++        return /^\d{1,2}-\d{1,2} weeks?$/.test(v) || /^\d{1,2} weeks?$/.test(v);
++      },
++      message: 'Flowering time should be in format "8-10 weeks" or "9 weeks"'
++    }
++  },
++  yield: {
++    type: String,
++    trim: true,
++    enum: ['Low', 'Medium', 'High', 'Very High'],
++    default: 'Medium'
++  },
++  description: {
++    type: String,
++    trim: true,
++    maxlength: [1000, 'Description cannot exceed 1000 characters']
++  },
++  image_url: {
++    type: String,
++    trim: true,
++    validate: {
++      validator: function(v) {
++        return !v || /^https?:\/\/.+\.(jpg|jpeg|png|gif|webp)$/i.test(v);
++      },
++      message: 'Image URL must be a valid image URL'
++    }
++  },
++  breeder: {
++    type: String,
++    trim: true,
++    maxlength: [100, 'Breeder name cannot exceed 100 characters']
++  },
++  lineage: {
++    parent1: {
++      type: String,
++      trim: true
++    },
++    parent2: {
++      type: String,
++      trim: true
++    }
++  },
++  medical_uses: [{
++    type: String,
++    enum: [
++      'Pain', 'Anxiety', 'Depression', 'Insomnia', 'Appetite Loss',
++      'Nausea', 'Inflammation', 'Seizures', 'PTSD', 'ADHD',
++      'Migraines', 'Arthritis', 'Glaucoma', 'Fibromyalgia'
++    ]
++  }],
++  growing_info: {
++    indoor_yield: String,
++    outdoor_yield: String,
++    height: String,
++    climate: {
++      type: String,
++      enum: ['Indoor', 'Outdoor', 'Both']
++    }
++  },
++  popularity_score: {
++    type: Number,
++    default: 0,
++    min: 0
++  },
++  verified: {
++    type: Boolean,
++    default: false
++  },
++  created_at: {
++    type: Date,
++    default: Date.now
++  },
++  updated_at: {
++    type: Date,
++    default: Date.now
++  }
++});
++
++// Validate that indica + sativa equals 100
++strainSchema.pre('save', function(next) {
++  if (this.indica + this.sativa !== 100) {
++    this.sativa = 100 - this.indica;
++  }
++  this.updated_at = new Date();
++  next();
++});
++
++// Index for search performance
++strainSchema.index({ name: 'text', genetics: 'text', description: 'text' });
++strainSchema.index({ difficulty: 1 });
++strainSchema.index({ indica: 1, sativa: 1 });
++strainSchema.index({ thc: -1 });
++strainSchema.index({ popularity_score: -1 });
++
++// Virtual for strain type
++strainSchema.virtual('type').get(function() {
++  if (this.indica > 70) return 'Indica';
++  if (this.sativa > 70) return 'Sativa';
++  return 'Hybrid';
++});
++
++// Transform output
++strainSchema.set('toJSON', {
++  virtuals: true,
++  transform: function(doc, ret) {
++    delete ret._id;
++    delete ret.__v;
++    return ret;
++  }
++});
++
++module.exports = mongoose.model('Strain', strainSchema);
+\ No newline at end of file
+diff --git a/backend/package.json b/backend/package.json
+new file mode 100644
+index 0000000..abcd3a2
+--- /dev/null
++++ b/backend/package.json
+@@ -0,0 +1,47 @@
++{
++  "name": "greed-gross-backend",
++  "version": "1.0.0",
++  "description": "Backend server for Greed & Gross cannabis breeding app",
++  "main": "server.js",
++  "scripts": {
++    "start": "node server.js",
++    "dev": "nodemon server.js",
++    "test": "jest"
++  },
++  "dependencies": {
++    "express": "^4.18.2",
++    "cors": "^2.8.5",
++    "helmet": "^7.1.0",
++    "express-rate-limit": "^7.1.5",
++    "compression": "^1.7.4",
++    "morgan": "^1.10.0",
++    "mongoose": "^8.0.3",
++    "bcryptjs": "^2.4.3",
++    "jsonwebtoken": "^9.0.2",
++    "express-validator": "^7.0.1",
++    "dotenv": "^16.3.1",
++    "multer": "^1.4.5-lts.1",
++    "sharp": "^0.33.1",
++    "axios": "^1.6.2",
++    "winston": "^3.11.0"
++  },
++  "devDependencies": {
++    "nodemon": "^3.0.2",
++    "jest": "^29.7.0",
++    "supertest": "^6.3.3"
++  },
++  "engines": {
++    "node": ">=18.0.0"
++  },
++  "keywords": [
++    "cannabis",
++    "breeding",
++    "simulation",
++    "ai",
++    "openai",
++    "mobile",
++    "backend"
++  ],
++  "author": "Marcone1983 <whitecasteddu@gmail.com>",
++  "license": "ISC"
++}
+\ No newline at end of file
+diff --git a/backend/server.js b/backend/server.js
+new file mode 100644
+index 0000000..fa02e49
+--- /dev/null
++++ b/backend/server.js
+@@ -0,0 +1,259 @@
++const express = require('express');
++const cors = require('cors');
++const helmet = require('helmet');
++const compression = require('compression');
++const morgan = require('morgan');
++const rateLimit = require('express-rate-limit');
++const mongoose = require('mongoose');
++const { body, validationResult } = require('express-validator');
++require('dotenv').config();
++
++const app = express();
++const PORT = process.env.PORT || 3000;
++
++// Security middleware
++app.use(helmet());
++app.use(cors({
++  origin: process.env.ALLOWED_ORIGINS?.split(',') || ['http://localhost:3000'],
++  credentials: true
++}));
++
++// Rate limiting
++const limiter = rateLimit({
++  windowMs: 15 * 60 * 1000, // 15 minutes
++  max: 100, // limit each IP to 100 requests per windowMs
++  message: {
++    error: 'Too many requests from this IP, please try again later.'
++  }
++});
++app.use(limiter);
++
++// Body parsing middleware
++app.use(compression());
++app.use(morgan('combined'));
++app.use(express.json({ limit: '10mb' }));
++app.use(express.urlencoded({ extended: true }));
++
++// MongoDB connection
++if (process.env.MONGODB_URI) {
++  mongoose.connect(process.env.MONGODB_URI, {
++    useNewUrlParser: true,
++    useUnifiedTopology: true,
++  }).then(() => {
++    console.log('✅ Connected to MongoDB');
++  }).catch((err) => {
++    console.error('❌ MongoDB connection error:', err);
++  });
++}
++
++// Strain Schema
++const strainSchema = new mongoose.Schema({
++  name: { type: String, required: true, unique: true },
++  genetics: { type: String, required: true },
++  thc: { type: Number, min: 0, max: 35 },
++  cbd: { type: Number, min: 0, max: 25 },
++  indica: { type: Number, min: 0, max: 100 },
++  sativa: { type: Number, min: 0, max: 100 },
++  effects: [String],
++  flavors: [String],
++  difficulty: { type: String, enum: ['Easy', 'Medium', 'Hard'] },
++  flowering_time: { type: String },
++  yield: { type: String },
++  description: String,
++  image_url: String,
++  breeder: String,
++  created_at: { type: Date, default: Date.now },
++  updated_at: { type: Date, default: Date.now }
++});
++
++const Strain = mongoose.model('Strain', strainSchema);
++
++// Breeding History Schema
++const breedingSchema = new mongoose.Schema({
++  user_id: { type: String, required: true },
++  parent1: { type: String, required: true },
++  parent2: { type: String, required: true },
++  result_strain: { type: String, required: true },
++  ai_response: { type: String, required: true },
++  image_url: String,
++  created_at: { type: Date, default: Date.now }
++});
++
++const BreedingHistory = mongoose.model('BreedingHistory', breedingSchema);
++
++// Routes
++
++// Health check
++app.get('/health', (req, res) => {
++  res.json({
++    status: 'healthy',
++    timestamp: new Date().toISOString(),
++    uptime: process.uptime(),
++    version: '1.0.0'
++  });
++});
++
++// Get all strains
++app.get('/api/strains', async (req, res) => {
++  try {
++    const { page = 1, limit = 20, search, difficulty, type } = req.query;
++    const query = {};
++    
++    if (search) {
++      query.$or = [
++        { name: { $regex: search, $options: 'i' } },
++        { genetics: { $regex: search, $options: 'i' } },
++        { effects: { $in: [new RegExp(search, 'i')] } }
++      ];
++    }
++    
++    if (difficulty) {
++      query.difficulty = difficulty;
++    }
++    
++    if (type === 'indica') {
++      query.indica = { $gt: 60 };
++    } else if (type === 'sativa') {
++      query.sativa = { $gt: 60 };
++    }
++    
++    const strains = await Strain.find(query)
++      .limit(limit * 1)
++      .skip((page - 1) * limit)
++      .sort({ name: 1 });
++    
++    const total = await Strain.countDocuments(query);
++    
++    res.json({
++      strains,
++      totalPages: Math.ceil(total / limit),
++      currentPage: page,
++      total
++    });
++  } catch (error) {
++    res.status(500).json({ error: 'Failed to fetch strains' });
++  }
++});
++
++// Get strain by ID
++app.get('/api/strains/:id', async (req, res) => {
++  try {
++    const strain = await Strain.findById(req.params.id);
++    if (!strain) {
++      return res.status(404).json({ error: 'Strain not found' });
++    }
++    res.json(strain);
++  } catch (error) {
++    res.status(500).json({ error: 'Failed to fetch strain' });
++  }
++});
++
++// Create new strain (admin only)
++app.post('/api/strains', [
++  body('name').isLength({ min: 1 }).withMessage('Name is required'),
++  body('genetics').isLength({ min: 1 }).withMessage('Genetics is required'),
++  body('thc').isFloat({ min: 0, max: 35 }).withMessage('THC must be between 0-35%'),
++  body('cbd').isFloat({ min: 0, max: 25 }).withMessage('CBD must be between 0-25%')
++], async (req, res) => {
++  const errors = validationResult(req);
++  if (!errors.isEmpty()) {
++    return res.status(400).json({ errors: errors.array() });
++  }
++  
++  try {
++    const strain = new Strain(req.body);
++    await strain.save();
++    res.status(201).json(strain);
++  } catch (error) {
++    if (error.code === 11000) {
++      res.status(400).json({ error: 'Strain name already exists' });
++    } else {
++      res.status(500).json({ error: 'Failed to create strain' });
++    }
++  }
++});
++
++// Save breeding result
++app.post('/api/breeding/save', [
++  body('user_id').isLength({ min: 1 }).withMessage('User ID is required'),
++  body('parent1').isLength({ min: 1 }).withMessage('Parent 1 is required'),
++  body('parent2').isLength({ min: 1 }).withMessage('Parent 2 is required'),
++  body('result_strain').isLength({ min: 1 }).withMessage('Result strain is required'),
++  body('ai_response').isLength({ min: 1 }).withMessage('AI response is required')
++], async (req, res) => {
++  const errors = validationResult(req);
++  if (!errors.isEmpty()) {
++    return res.status(400).json({ errors: errors.array() });
++  }
++  
++  try {
++    const breeding = new BreedingHistory(req.body);
++    await breeding.save();
++    res.status(201).json(breeding);
++  } catch (error) {
++    res.status(500).json({ error: 'Failed to save breeding result' });
++  }
++});
++
++// Get user's breeding history
++app.get('/api/breeding/history/:userId', async (req, res) => {
++  try {
++    const { page = 1, limit = 10 } = req.query;
++    const history = await BreedingHistory.find({ user_id: req.params.userId })
++      .limit(limit * 1)
++      .skip((page - 1) * limit)
++      .sort({ created_at: -1 });
++    
++    const total = await BreedingHistory.countDocuments({ user_id: req.params.userId });
++    
++    res.json({
++      history,
++      totalPages: Math.ceil(total / limit),
++      currentPage: page,
++      total
++    });
++  } catch (error) {
++    res.status(500).json({ error: 'Failed to fetch breeding history' });
++  }
++});
++
++// Analytics endpoint
++app.get('/api/analytics/popular-strains', async (req, res) => {
++  try {
++    const popularStrains = await BreedingHistory.aggregate([
++      {
++        $group: {
++          _id: '$parent1',
++          count: { $sum: 1 }
++        }
++      },
++      { $sort: { count: -1 } },
++      { $limit: 10 }
++    ]);
++    
++    res.json(popularStrains);
++  } catch (error) {
++    res.status(500).json({ error: 'Failed to fetch analytics' });
++  }
++});
++
++// Error handling middleware
++app.use((err, req, res, next) => {
++  console.error(err.stack);
++  res.status(500).json({
++    error: 'Something went wrong!',
++    message: process.env.NODE_ENV === 'development' ? err.message : 'Internal server error'
++  });
++});
++
++// 404 handler
++app.use('*', (req, res) => {
++  res.status(404).json({ error: 'API endpoint not found' });
++});
++
++app.listen(PORT, () => {
++  console.log(`🚀 Greed & Gross Backend server running on port ${PORT}`);
++  console.log(`📝 Environment: ${process.env.NODE_ENV || 'development'}`);
++});
++
++module.exports = app;
