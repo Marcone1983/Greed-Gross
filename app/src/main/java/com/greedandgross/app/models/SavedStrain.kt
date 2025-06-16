@@ -15,10 +15,11 @@ data class SavedStrain(
     val yield: String = "",
     val effects: String = "",
     val terpenes: String = "",
+    val medicalUse: String = "", // Malattie e condizioni mediche
     val createdBy: String = "", // userId
     val createdAt: Long = 0,
     val isFavorite: Boolean = false
 ) {
     // Costruttore vuoto richiesto da Firebase
-    constructor() : this("", "", "", "", "", "", "", "", "", "", "", "", "", "", "", 0, false)
+    constructor() : this("", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", 0, false)
 }

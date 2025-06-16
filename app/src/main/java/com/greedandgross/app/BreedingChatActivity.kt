@@ -273,6 +273,9 @@ class BreedingChatActivity : AppCompatActivity() {
         // Parse parent strains from original message
         val parents = parseParentStrains(originalMessage)
         
+        // Estrai tutti i dati dalla risposta GPT
+        val extractedData = extractStrainData(analysis)
+        
         val savedStrain = SavedStrain(
             id = strainId,
             name = name,
@@ -280,8 +283,15 @@ class BreedingChatActivity : AppCompatActivity() {
             imageUrl = imageUrl,
             parentStrain1 = parents.first,
             parentStrain2 = parents.second,
-            characteristics = analysis,
-            phenotype = "Hybrid", // Default
+            characteristics = extractedData["characteristics"] ?: "",
+            thcContent = extractedData["thc"] ?: "",
+            cbdContent = extractedData["cbd"] ?: "",
+            phenotype = extractedData["phenotype"] ?: "Hybrid",
+            floweringTime = extractedData["flowering"] ?: "",
+            yield = extractedData["yield"] ?: "",
+            effects = extractedData["effects"] ?: "",
+            terpenes = extractedData["terpenes"] ?: "",
+            medicalUse = extractedData["medical"] ?: "",
             createdBy = userId,
             createdAt = System.currentTimeMillis()
         )
@@ -298,6 +308,65 @@ class BreedingChatActivity : AppCompatActivity() {
             .addOnFailureListener { e ->
                 addMessage(ChatMessage("❌ Errore salvataggio: ${e.message}", false, System.currentTimeMillis()))
             }
+    }
+    
+    private fun extractStrainData(analysis: String): Map<String, String> {
+        val data = mutableMapOf<String, String>()
+        
+        // Estrai THC
+        val thcPattern = "THC[:：]?\\s*([0-9]+[.,]?[0-9]*[-–]?[0-9]*[.,]?[0-9]*%?)".toRegex(RegexOption.IGNORE_CASE)
+        thcPattern.find(analysis)?.let { data["thc"] = it.groupValues[1] }
+        
+        // Estrai CBD
+        val cbdPattern = "CBD[:：]?\\s*([0-9]+[.,]?[0-9]*[-–]?[0-9]*[.,]?[0-9]*%?)".toRegex(RegexOption.IGNORE_CASE)
+        cbdPattern.find(analysis)?.let { data["cbd"] = it.groupValues[1] }
+        
+        // Estrai fenotipo (Indica/Sativa/Hybrid)
+        when {
+            analysis.contains("sativa dominant", ignoreCase = true) -> data["phenotype"] = "Sativa Dominant"
+            analysis.contains("indica dominant", ignoreCase = true) -> data["phenotype"] = "Indica Dominant"
+            analysis.contains("50/50", ignoreCase = true) -> data["phenotype"] = "50/50 Hybrid"
+            analysis.contains("hybrid", ignoreCase = true) -> data["phenotype"] = "Hybrid"
+            analysis.contains("sativa", ignoreCase = true) -> data["phenotype"] = "Sativa"
+            analysis.contains("indica", ignoreCase = true) -> data["phenotype"] = "Indica"
+        }
+        
+        // Estrai tempo fioritura
+        val floweringPattern = "(?:flowering|fioritura)[:：]?\\s*([0-9]+[-–]?[0-9]*\\s*(?:weeks?|settimane?))".toRegex(RegexOption.IGNORE_CASE)
+        floweringPattern.find(analysis)?.let { data["flowering"] = it.groupValues[1] }
+        
+        // Estrai yield
+        val yieldPattern = "(?:yield|resa)[:：]?\\s*([0-9]+[-–]?[0-9]*\\s*(?:g/m²|gr/m²))".toRegex(RegexOption.IGNORE_CASE)
+        yieldPattern.find(analysis)?.let { data["yield"] = it.groupValues[1] }
+        
+        // Estrai terpeni
+        val terpenePattern = "(?:terpeni|terpenes?)[:：]?\\s*([^.\\n]+)".toRegex(RegexOption.IGNORE_CASE)
+        terpenePattern.find(analysis)?.let { 
+            val terpenes = it.groupValues[1]
+                .replace("dominanti", "")
+                .replace("principali", "")
+                .trim()
+            data["terpenes"] = terpenes
+        }
+        
+        // Estrai effetti
+        val effectsPattern = "(?:effetti|effects?)[:：]?\\s*([^.\\n]+)".toRegex(RegexOption.IGNORE_CASE)
+        effectsPattern.find(analysis)?.let { data["effects"] = it.groupValues[1].trim() }
+        
+        // Estrai malattie/usi medici
+        val medicalPattern = "(?:medic[ao]|malattie|condizioni|therapeutic|medical use)[:：]?\\s*([^.\\n]+)".toRegex(RegexOption.IGNORE_CASE)
+        medicalPattern.find(analysis)?.let { 
+            data["medical"] = it.groupValues[1].trim()
+            // Aggiungi ai characteristics se trovato
+            data["characteristics"] = "Uso medico: ${it.groupValues[1].trim()}"
+        }
+        
+        // Se non trova characteristics specifici, usa i primi 200 caratteri
+        if (!data.containsKey("characteristics")) {
+            data["characteristics"] = analysis.take(200) + "..."
+        }
+        
+        return data
     }
     
     private fun parseParentStrains(message: String): Pair<String, String> {
