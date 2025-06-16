@@ -46,7 +46,17 @@ class SplashActivity : AppCompatActivity() {
                 100 -> {
                     progressText.text = "Benvenuto nel laboratorio!"
                     Handler(Looper.getMainLooper()).postDelayed({
-                        startActivity(Intent(this, MainActivity::class.java))
+                        // Check if user is already logged in
+                        val prefs = getSharedPreferences("greed_gross_prefs", MODE_PRIVATE)
+                        val savedUsername = prefs.getString("username", null)
+                        
+                        if (savedUsername != null && BuildConfig.DEBUG) {
+                            // Skip login in debug if already logged in
+                            startActivity(Intent(this, MainActivity::class.java))
+                        } else {
+                            // Show login page
+                            startActivity(Intent(this, LoginActivity::class.java))
+                        }
                         finish()
                     }, 500)
                 }

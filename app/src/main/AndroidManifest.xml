@@ -59,6 +59,11 @@
         android:label="GenoBank Admin"
         android:exported="false" />
         
+      <activity
+        android:name=".LoginActivity"
+        android:label="Login"
+        android:exported="false" />
+        
       <provider
         android:name="androidx.core.content.FileProvider"
         android:authorities="${applicationId}.fileprovider"

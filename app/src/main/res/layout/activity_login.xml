@@ -1,0 +1,273 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/gradient_background"
+    android:fillViewport="true">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="24dp">
+
+        <!-- Logo -->
+        <ImageView
+            android:id="@+id/logo"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:src="@drawable/logo_greed_gross"
+            android:layout_marginTop="40dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <!-- App Title -->
+        <TextView
+            android:id="@+id/appTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="GREED &amp; GROSS"
+            android:textSize="28sp"
+            android:textStyle="bold"
+            android:textColor="@color/green_primary"
+            android:fontFamily="sans-serif-condensed"
+            android:layout_marginTop="16dp"
+            app:layout_constraintTop_toBottomOf="@+id/logo"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <!-- Subtitle -->
+        <TextView
+            android:id="@+id/subtitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="🧬 Cannabis Breeding Simulator"
+            android:textSize="16sp"
+            android:textColor="@color/green_secondary"
+            android:layout_marginTop="8dp"
+            app:layout_constraintTop_toBottomOf="@+id/appTitle"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <!-- Toggle Login/Register -->
+        <LinearLayout
+            android:id="@+id/toggleLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="40dp"
+            android:background="@drawable/rounded_background_dark"
+            android:padding="4dp"
+            app:layout_constraintTop_toBottomOf="@+id/subtitle"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
+
+            <Button
+                android:id="@+id/loginTab"
+                android:layout_width="0dp"
+                android:layout_height="45dp"
+                android:layout_weight="1"
+                android:text="LOGIN"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:background="@drawable/tab_selected"
+                android:textColor="@color/black"
+                android:layout_margin="2dp" />
+
+            <Button
+                android:id="@+id/registerTab"
+                android:layout_width="0dp"
+                android:layout_height="45dp"
+                android:layout_weight="1"
+                android:text="REGISTER"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                android:background="@drawable/tab_unselected"
+                android:textColor="@color/green_secondary"
+                android:layout_margin="2dp" />
+
+        </LinearLayout>
+
+        <!-- Form Container -->
+        <LinearLayout
+            android:id="@+id/formContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginTop="32dp"
+            app:layout_constraintTop_toBottomOf="@+id/toggleLayout"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
+
+            <!-- Username/Email Field -->
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/usernameLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="🧬 Username"
+                app:hintTextColor="@color/green_secondary"
+                app:boxStrokeColor="@color/green_primary"
+                app:boxBackgroundColor="@color/dark_surface"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/usernameField"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/white"
+                    android:textColorHint="@color/green_secondary" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <!-- Email Field (Register only) -->
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/emailLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:hint="📧 Email"
+                android:visibility="gone"
+                app:hintTextColor="@color/green_secondary"
+                app:boxStrokeColor="@color/green_primary"
+                app:boxBackgroundColor="@color/dark_surface"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/emailField"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textEmailAddress"
+                    android:textColor="@color/white"
+                    android:textColorHint="@color/green_secondary" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <!-- Password Field -->
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/passwordLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:hint="🔐 Password"
+                app:hintTextColor="@color/green_secondary"
+                app:boxStrokeColor="@color/green_primary"
+                app:boxBackgroundColor="@color/dark_surface"
+                app:passwordToggleEnabled="true"
+                app:passwordToggleTint="@color/green_primary"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/passwordField"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textPassword"
+                    android:textColor="@color/white"
+                    android:textColorHint="@color/green_secondary" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <!-- Confirm Password Field (Register only) -->
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/confirmPasswordLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:hint="🔒 Confirm Password"
+                android:visibility="gone"
+                app:hintTextColor="@color/green_secondary"
+                app:boxStrokeColor="@color/green_primary"
+                app:boxBackgroundColor="@color/dark_surface"
+                app:passwordToggleEnabled="true"
+                app:passwordToggleTint="@color/green_primary"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/confirmPasswordField"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textPassword"
+                    android:textColor="@color/white"
+                    android:textColorHint="@color/green_secondary" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+        </LinearLayout>
+
+        <!-- Submit Button -->
+        <Button
+            android:id="@+id/submitButton"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:layout_marginTop="32dp"
+            android:text="🚀 ENTER LABORATORY"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:textColor="@color/black"
+            android:background="@drawable/button_primary"
+            app:layout_constraintTop_toBottomOf="@+id/formContainer"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <!-- Quick Login Options -->
+        <LinearLayout
+            android:id="@+id/quickLoginLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="24dp"
+            android:gravity="center"
+            app:layout_constraintTop_toBottomOf="@+id/submitButton"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Quick Login:"
+                android:textColor="@color/green_secondary"
+                android:textSize="14sp"
+                android:layout_marginEnd="16dp" />
+
+            <Button
+                android:id="@+id/quickMarcone"
+                android:layout_width="wrap_content"
+                android:layout_height="36dp"
+                android:text="👑 Marcone"
+                android:textSize="12sp"
+                android:background="@drawable/button_secondary"
+                android:textColor="@color/green_primary"
+                android:layout_marginEnd="8dp"
+                android:paddingHorizontal="16dp" />
+
+            <Button
+                android:id="@+id/quickGuest"
+                android:layout_width="wrap_content"
+                android:layout_height="36dp"
+                android:text="👤 Guest"
+                android:textSize="12sp"
+                android:background="@drawable/button_secondary"
+                android:textColor="@color/green_primary"
+                android:paddingHorizontal="16dp" />
+
+        </LinearLayout>
+
+        <!-- Footer -->
+        <TextView
+            android:id="@+id/footer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="🌿 AI-Powered Cannabis Genetics • Premium Features Available"
+            android:textColor="@color/green_secondary"
+            android:textSize="12sp"
+            android:gravity="center"
+            android:layout_marginTop="32dp"
+            android:layout_marginBottom="24dp"
+            app:layout_constraintTop_toBottomOf="@+id/quickLoginLayout"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</ScrollView>

@@ -83,54 +83,14 @@ class MainActivity : AppCompatActivity() {
         val currentUser = auth.currentUser
         
         if (currentUser == null) {
-            if (BuildConfig.DEBUG) {
-                // In debug, mostra dialog per scegliere username
-                showDebugLoginDialog()
-            } else {
-                // In produzione, login anonimo automatico
-                auth.signInAnonymously()
-                    .addOnCompleteListener { task ->
-                        if (task.isSuccessful) {
-                            android.util.Log.d("MainActivity", "Production login successful")
-                        }
+            // Auto login anonimo se non già autenticato
+            auth.signInAnonymously()
+                .addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+                        android.util.Log.d("MainActivity", "Auto login successful")
                     }
-            }
-        }
-    }
-    
-    private fun showDebugLoginDialog() {
-        val input = EditText(this)
-        input.hint = "Username (es: Mario123, TestUser, Marcone)"
-        
-        AlertDialog.Builder(this)
-            .setTitle("🔧 Debug Login")
-            .setMessage("Scegli un username per testare l'app:")
-            .setView(input)
-            .setPositiveButton("Login") { _, _ ->
-                val username = input.text.toString().ifEmpty { "TestUser${System.currentTimeMillis() % 1000}" }
-                performDebugLogin(username)
-            }
-            .setNegativeButton("Random") { _, _ ->
-                performDebugLogin("User${System.currentTimeMillis() % 1000}")
-            }
-            .setCancelable(false)
-            .show()
-    }
-    
-    private fun performDebugLogin(username: String) {
-        val auth = FirebaseAuth.getInstance()
-        auth.signInAnonymously()
-            .addOnCompleteListener { task ->
-                if (task.isSuccessful) {
-                    // In debug, simula l'username scelto nei log
-                    android.util.Log.d("MainActivity", "Debug login as: $username (real UID: ${auth.currentUser?.uid})")
-                    // Salva username scelto per mostrarlo nell'UI
-                    getSharedPreferences("greed_gross_prefs", MODE_PRIVATE)
-                        .edit()
-                        .putString("debug_username", username)
-                        .apply()
                 }
-            }
+        }
     }
     
     private fun animateCardClick(view: View, action: () -> Unit) {
