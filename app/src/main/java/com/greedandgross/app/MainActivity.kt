@@ -15,7 +15,7 @@ import kotlinx.coroutines.launch
 class MainActivity : AppCompatActivity() {
     
     private lateinit var billingManager: BillingManager
-    private val OWNER_UID = "Marcone1983"
+    private val OWNER_UID = "Marcone"
     
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -100,7 +100,7 @@ class MainActivity : AppCompatActivity() {
     
     private fun showDebugLoginDialog() {
         val input = EditText(this)
-        input.hint = "Username (es: Mario123, TestUser, Marcone1983)"
+        input.hint = "Username (es: Mario123, TestUser, Marcone)"
         
         AlertDialog.Builder(this)
             .setTitle("🔧 Debug Login")

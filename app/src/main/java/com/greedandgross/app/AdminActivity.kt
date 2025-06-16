@@ -32,7 +32,7 @@ class AdminActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_admin)
         
-        // Solo Marcone1983 può accedere!
+        // Solo Marcone può accedere!
         if (!isOwner()) {
             finish()
             return
@@ -50,7 +50,7 @@ class AdminActivity : AppCompatActivity() {
         } else {
             // In produzione, check UID reale
             val currentUser = FirebaseAuth.getInstance().currentUser
-            val OWNER_UID = "Marcone1983"
+            val OWNER_UID = "Marcone"
             currentUser?.uid == OWNER_UID
         }
     }
