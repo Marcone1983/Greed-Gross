@@ -82,8 +82,12 @@ class BreedingChatActivity : AppCompatActivity() {
         val message = inputMessage.text.toString().trim()
         if (message.isEmpty()) return
         
-        // BYPASS PROPRIETARIO: Tu puoi sempre usarla!
-        val isOwner = true // Marcone1983 sempre premium
+        val currentUser = FirebaseAuth.getInstance().currentUser
+        val isOwner = if (BuildConfig.DEBUG) {
+            true // In debug tutti possono usare
+        } else {
+            currentUser?.uid == "Marcone1983" // In produzione solo Marcone
+        }
         
         // Controllo trial: se già usato E non sei il proprietario, mostra paywall
         if (isTrialUsed && !isOwner) {
@@ -151,8 +155,13 @@ class BreedingChatActivity : AppCompatActivity() {
                 ))
             }
             
-            // Marca trial come usato (per altri utenti, tu sei sempre premium)
-            val isOwner = true // Marcone1983 sempre premium
+            // Marca trial come usato 
+            val currentUser = FirebaseAuth.getInstance().currentUser
+            val isOwner = if (BuildConfig.DEBUG) {
+                true // In debug tutti possono usare
+            } else {
+                currentUser?.uid == "Marcone1983" // In produzione solo Marcone
+            }
             if (!isTrialUsed && !isOwner) {
                 prefs.edit().putBoolean("trial_used", true).apply()
                 isTrialUsed = true
