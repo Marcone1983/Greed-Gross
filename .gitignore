@@ -1,0 +1,30 @@
+# Gradle
+/build
+.gradle/
+
+# --- SECURITY -----------------------------------------------------------------
+# Never commit keystore files
+app/keystore/*.jks
+
+# Local machine secrets
+local.properties
+
+# IDE
+.idea/
+*.iml
+*.iws
+
+# Android
+/captures
+/out
+*.apk
+*.ap_
+*.dex
+/tmp
+
+# Firebase
+google-services.json
+
+# OS
+.DS_Store
+Thumbs.db

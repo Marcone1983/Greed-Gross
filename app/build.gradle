@@ -2,6 +2,7 @@ plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
     id 'com.google.gms.google-services'
+    id 'kotlin-kapt'
 }
 
 android {
@@ -21,16 +22,34 @@ android {
 
     signingConfigs {
         release {
-            storeFile file('release-key.keystore')
-            storePassword 'greedgross2024'
-            keyAlias 'greed-gross-key'
-            keyPassword 'greedgross2024'
+            def keystorePath = System.getenv("RELEASE_KEYSTORE_PATH") ?: project.findProperty("RELEASE_KEYSTORE_PATH") ?: 'release-key.keystore'
+            def keystorePwd = System.getenv("RELEASE_KEYSTORE_PASSWORD") ?: project.findProperty("RELEASE_KEYSTORE_PASSWORD") ?: 'greedgross2024'
+            def keyAlias = System.getenv("RELEASE_KEY_ALIAS") ?: project.findProperty("RELEASE_KEY_ALIAS") ?: 'greed-gross-key'
+
+            storeFile file(keystorePath)
+            storePassword keystorePwd
+            keyAlias keyAlias
+            keyPassword keystorePwd
         }
     }
     
+    flavorDimensions += ["env"]
+
+    productFlavors {
+        dev {
+            dimension "env"
+            applicationIdSuffix ".dev"
+            versionNameSuffix "-dev"
+            buildConfigField "String", "API_BASE_URL", "\"https://dev-api.greedandgross.com\""
+        }
+        prod {
+            dimension "env"
+            buildConfigField "String", "API_BASE_URL", "\"${System.getenv('API_BASE_URL_PROD') ?: 'https://api.greedandgross.com'}\""
+        }
+    }
+
     buildTypes {
         debug {
-            applicationIdSuffix ".debug"
             debuggable true
             buildConfigField "String", "OPENAI_API_KEY", "\"${project.findProperty('openai.api.key') ?: 'API_KEY_NOT_SET'}\""
         }
@@ -93,6 +112,13 @@ dependencies {
     implementation 'com.google.firebase:firebase-database'
     implementation 'com.google.firebase:firebase-analytics'
     
+    // Logging
+    implementation 'com.jakewharton.timber:timber:5.0.1'
+    
+    // DI (example)
+    kapt 'com.google.dagger:dagger-compiler:2.51'
+    
+    // Testing
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
