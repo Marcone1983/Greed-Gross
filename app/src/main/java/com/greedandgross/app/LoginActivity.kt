@@ -13,6 +13,7 @@ import com.google.android.material.textfield.TextInputLayout
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import com.greedandgross.app.BuildConfig
 
 class LoginActivity : AppCompatActivity() {
     
