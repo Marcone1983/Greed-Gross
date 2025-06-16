@@ -84,6 +84,8 @@ jobs:
     - name: 🚀 Build Release APK
       run: ./gradlew assembleProdRelease --stacktrace
       env:
+        JAVA_OPTS: "-Djdk.util.jar.enableMultiRelease=false"
+      env:
         OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
         RELEASE_KEYSTORE_PASSWORD: ${{ secrets.RELEASE_KEYSTORE_PASSWORD }}
         RELEASE_KEY_ALIAS: ${{ secrets.RELEASE_KEY_ALIAS }}
