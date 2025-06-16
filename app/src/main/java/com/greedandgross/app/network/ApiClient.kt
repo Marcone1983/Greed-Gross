@@ -29,11 +29,7 @@ class ApiClient {
         .build()
     
     private val apiKey: String
-        get() {
-            // API key offuscata per Marcone1983
-            val encoded = "c2stcHJvai11ZVlWeWx0Q3FCcWgxR1pveE10NjJPSnhtSzU1SVRKQ3ZsNGRiVW9CSzd5OVZjWE80Y0RGbExqMzJ0Wkl2YjUwTjE4NGhYNE8zN1QzQmxia0ZKVUxvT0xpSnA5Wlg4YkppQTJrd1BOWU01SW1hOUZ2YUNnbUIxTUNsLXR4RUwyWWtPS0cyMkFqNUVZNWFhYlRkOEo0Z2x5U3BHd0EK"
-            return String(Base64.decode(encoded, Base64.DEFAULT)).trim()
-        }
+        get() = BuildConfig.OPENAI_API_KEY
     
     private fun generateCrossID(message: String): String {
         // Genera ID unico per l'incrocio (es: "lemon_x_skunk")
@@ -74,7 +70,7 @@ class ApiClient {
             """.trimIndent()
             
             val requestBody = JSONObject().apply {
-                put("model", "gpt-4")
+                put("model", "gpt-4o-mini")
                 put("messages", JSONArray().apply {
                     put(JSONObject().apply {
                         put("role", "system")
@@ -178,7 +174,7 @@ class ApiClient {
             """.trimIndent()
             
             val requestBody = JSONObject().apply {
-                put("model", "gpt-4")
+                put("model", "gpt-4o-mini")
                 put("messages", JSONArray().apply {
                     put(JSONObject().apply {
                         put("role", "system")
