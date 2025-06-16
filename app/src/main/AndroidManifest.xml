@@ -1,0 +1,72 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.greedandgross.app">
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="com.android.vending.BILLING" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+
+    <application
+      android:name=".MainApplication"
+      android:label="@string/app_name"
+      android:icon="@mipmap/ic_launcher"
+      android:roundIcon="@mipmap/ic_launcher_round"
+      android:allowBackup="false"
+      android:theme="@style/AppTheme">
+      <activity
+        android:name=".SplashActivity"
+        android:label="@string/app_name"
+        android:theme="@style/Theme.GreedAndGross.Splash"
+        android:exported="true">
+        <intent-filter>
+            <action android:name="android.intent.action.MAIN" />
+            <category android:name="android.intent.category.LAUNCHER" />
+        </intent-filter>
+      </activity>
+      
+      <activity
+        android:name=".MainActivity"
+        android:label="@string/app_name"
+        android:exported="false" />
+        
+      <activity
+        android:name=".BreedingChatActivity"
+        android:label="Breeding Laboratory"
+        android:exported="false" />
+        
+      <activity
+        android:name=".PaywallActivity"
+        android:label="Premium"
+        android:exported="false" />
+        
+      <activity
+        android:name=".GlobalChatActivity"
+        android:label="Chat Globale"
+        android:exported="false" />
+        
+      <activity
+        android:name=".MyStrainsActivity"
+        android:label="I Miei Strain"
+        android:exported="false" />
+        
+      <activity
+        android:name=".SettingsActivity"
+        android:label="Impostazioni"
+        android:exported="false" />
+        
+      <activity
+        android:name=".AdminActivity"
+        android:label="GenoBank Admin"
+        android:exported="false" />
+        
+      <provider
+        android:name="androidx.core.content.FileProvider"
+        android:authorities="${applicationId}.fileprovider"
+        android:exported="false"
+        android:grantUriPermissions="true">
+        <meta-data
+          android:name="android.support.FILE_PROVIDER_PATHS"
+          android:resource="@xml/file_paths" />
+      </provider>
+    </application>
+</manifest>

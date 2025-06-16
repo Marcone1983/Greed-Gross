@@ -1,0 +1,23 @@
+{
+  "rules": {
+    "chat_messages": {
+      ".read": "auth != null",
+      ".write": "auth != null",
+      "$messageId": {
+        ".validate": "newData.hasChildren(['username', 'message', 'timestamp', 'userId'])"
+      }
+    },
+    "online_users": {
+      ".read": "auth != null",
+      "$userId": {
+        ".write": "$userId === auth.uid"
+      }
+    },
+    "user_strains": {
+      "$userId": {
+        ".read": "$userId === auth.uid",
+        ".write": "$userId === auth.uid"
+      }
+    }
+  }
+}

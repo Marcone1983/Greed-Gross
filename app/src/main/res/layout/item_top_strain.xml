@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:padding="12dp"
+    android:gravity="center_vertical">
+
+    <TextView
+        android:id="@+id/rankNumber"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:text="#1"
+        android:textColor="@color/green_primary"
+        android:textStyle="bold"
+        android:textSize="14sp"
+        android:gravity="center"
+        android:background="@drawable/chat_bubble_bot" />
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:layout_marginStart="12dp">
+
+        <TextView
+            android:id="@+id/strainName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="LEMON × SKUNK"
+            android:textColor="@color/white"
+            android:textSize="14sp"
+            android:textStyle="bold" />
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/strainCount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="42 volte"
+        android:textColor="@color/text_secondary"
+        android:textSize="12sp"
+        android:layout_marginStart="8dp" />
+
+</LinearLayout>

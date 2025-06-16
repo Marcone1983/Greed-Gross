@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Primary Colors -->
+    <color name="green_primary">#4CAF50</color>
+    <color name="green_secondary">#81C784</color>
+    <color name="green_dark">#388E3C</color>
+    <color name="green_light">#C8E6C9</color>
+    
+    <!-- Accent Colors -->
+    <color name="purple_accent">#7B1FA2</color>
+    <color name="orange_accent">#FF6F00</color>
+    
+    <!-- Background Colors -->
+    <color name="dark_background">#121212</color>
+    <color name="dark_surface">#1E1E1E</color>
+    <color name="dark_surface_variant">#2C2C2C</color>
+    
+    <!-- Card Colors -->
+    <color name="card_breeding">#2E7D32</color>
+    <color name="card_chat">#1565C0</color>
+    <color name="card_strains">#6A1B9A</color>
+    <color name="card_settings">#424242</color>
+    
+    <!-- Text Colors -->
+    <color name="text_primary">#FFFFFF</color>
+    <color name="text_secondary">#B3B3B3</color>
+    <color name="text_hint">#666666</color>
+    
+    <!-- Utility Colors -->
+    <color name="white">#FFFFFF</color>
+    <color name="white_80">#CCFFFFFF</color>
+    <color name="black">#000000</color>
+    <color name="transparent">#00000000</color>
+    
+    <!-- Chat Colors -->
+    <color name="chat_user_background">#2E7D32</color>
+    <color name="chat_bot_background">#424242</color>
+</resources>
