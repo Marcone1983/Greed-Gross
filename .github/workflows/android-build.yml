@@ -79,7 +79,7 @@ jobs:
         
     - name: 🔐 Create Keystore
       run: |
-        echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 -d > release-key.keystore
+        echo "${{ secrets.KEYSTORE_BASE64 }}" | base64 -d > app/release-key.keystore
         
     - name: 🚀 Build Release APK
       run: ./gradlew assembleProdRelease --stacktrace
