@@ -1,6 +1,7 @@
 package com.greedandgross.app
 
 import android.app.Application
+import com.greedandgross.app.BuildConfig
 import com.greedandgross.app.utils.LanguageManager
 import timber.log.Timber
 
