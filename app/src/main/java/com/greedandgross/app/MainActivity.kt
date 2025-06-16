@@ -3,6 +3,8 @@ package com.greedandgross.app
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import android.widget.EditText
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.cardview.widget.CardView
 import androidx.lifecycle.lifecycleScope
@@ -57,12 +59,12 @@ class MainActivity : AppCompatActivity() {
     
     private fun checkPremiumAndNavigate(targetActivity: Class<*>) {
         val currentUser = FirebaseAuth.getInstance().currentUser
-        val isOwner = if (BuildConfig.DEBUG) {
-            // In debug mode, sempre owner per Marcone
-            true
-        } else {
-            // In produzione, check UID reale
-            currentUser?.uid == OWNER_UID
+        val isOwner = currentUser?.uid == OWNER_UID
+        
+        if (BuildConfig.DEBUG) {
+            // In debug mode, tutti possono entrare per testare
+            startActivity(Intent(this@MainActivity, targetActivity))
+            return
         }
         
         lifecycleScope.launch {
@@ -81,17 +83,11 @@ class MainActivity : AppCompatActivity() {
         val currentUser = auth.currentUser
         
         if (currentUser == null) {
-            // Per debugging: login con UID fisso per Marcone1983
             if (BuildConfig.DEBUG) {
-                // In debug, usa sempre "Marcone1983" come UID
-                auth.signInAnonymously()
-                    .addOnCompleteListener { task ->
-                        if (task.isSuccessful) {
-                            android.util.Log.d("MainActivity", "Debug login successful as: ${auth.currentUser?.uid}")
-                        }
-                    }
+                // In debug, mostra dialog per scegliere username
+                showDebugLoginDialog()
             } else {
-                // In produzione, ogni utente ha UID unico
+                // In produzione, login anonimo automatico
                 auth.signInAnonymously()
                     .addOnCompleteListener { task ->
                         if (task.isSuccessful) {
@@ -100,6 +96,41 @@ class MainActivity : AppCompatActivity() {
                     }
             }
         }
+    }
+    
+    private fun showDebugLoginDialog() {
+        val input = EditText(this)
+        input.hint = "Username (es: Mario123, TestUser, Marcone1983)"
+        
+        AlertDialog.Builder(this)
+            .setTitle("🔧 Debug Login")
+            .setMessage("Scegli un username per testare l'app:")
+            .setView(input)
+            .setPositiveButton("Login") { _, _ ->
+                val username = input.text.toString().ifEmpty { "TestUser${System.currentTimeMillis() % 1000}" }
+                performDebugLogin(username)
+            }
+            .setNegativeButton("Random") { _, _ ->
+                performDebugLogin("User${System.currentTimeMillis() % 1000}")
+            }
+            .setCancelable(false)
+            .show()
+    }
+    
+    private fun performDebugLogin(username: String) {
+        val auth = FirebaseAuth.getInstance()
+        auth.signInAnonymously()
+            .addOnCompleteListener { task ->
+                if (task.isSuccessful) {
+                    // In debug, simula l'username scelto nei log
+                    android.util.Log.d("MainActivity", "Debug login as: $username (real UID: ${auth.currentUser?.uid})")
+                    // Salva username scelto per mostrarlo nell'UI
+                    getSharedPreferences("greed_gross_prefs", MODE_PRIVATE)
+                        .edit()
+                        .putString("debug_username", username)
+                        .apply()
+                }
+            }
     }
     
     private fun animateCardClick(view: View, action: () -> Unit) {
