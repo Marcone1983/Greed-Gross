@@ -3,7 +3,7 @@
 ## Data Types Collected
 
 ### Personal Information
-- [x] **Email address** - Required for account creation
+- [ ] **Email address** - Not collected (anonymous auth only)
 - [ ] Name - Not collected
 - [ ] Phone number - Not collected  
 - [ ] Physical address - Not collected
