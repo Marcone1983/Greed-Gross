@@ -2,25 +2,21 @@
   "rules": {
     "chat_messages": {
       ".read": "auth != null",
-      ".write": "auth != null && newData.child('userId').val() === auth.uid",
+      ".write": "auth != null",
       "$messageId": {
-        ".validate": "newData.hasChildren(['username', 'message', 'timestamp', 'userId']) && newData.child('message').isString() && newData.child('message').val().length <= 500 && newData.child('timestamp').isNumber()"
+        ".validate": "newData.hasChildren(['username', 'message', 'timestamp', 'userId']) && newData.child('message').isString() && newData.child('message').val().length <= 500"
       }
     },
     "user_strains": {
       "$userId": {
         ".read": "$userId === auth.uid",
-        ".write": "$userId === auth.uid && newData.child('createdBy').val() === auth.uid",
-        "$strainId": {
-          ".validate": "newData.hasChildren(['name', 'description', 'createdBy']) && newData.child('name').val().length <= 100"
-        }
+        ".write": "$userId === auth.uid"
       }
     },
     "online_users": {
       ".read": "auth != null",
       "$userId": {
-        ".write": "$userId === auth.uid",
-        ".validate": "newData.hasChildren(['username', 'lastSeen']) && newData.child('lastSeen').isNumber()"
+        ".write": "$userId === auth.uid"
       }
     }
   }
