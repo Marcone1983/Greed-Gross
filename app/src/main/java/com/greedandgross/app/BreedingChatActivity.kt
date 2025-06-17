@@ -85,8 +85,14 @@ class BreedingChatActivity : AppCompatActivity() {
         val message = inputMessage.text.toString().trim()
         if (message.isEmpty()) return
         
-        // MARCONE NON HA TRIAL - SEMPRE ACCESSO!
-        continueWithMessage()
+        // HARDCODED: Marcone sempre accesso
+        val isMarcone = true // TODO: Implementare check reale per Marcone
+        
+        if (isMarcone || !isTrialUsed || BuildConfig.DEBUG) {
+            continueWithMessage()
+        } else {
+            startActivity(Intent(this@BreedingChatActivity, PaywallActivity::class.java))
+        }
     }
     
     private fun continueWithMessage() {
