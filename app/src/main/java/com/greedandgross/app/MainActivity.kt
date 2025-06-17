@@ -58,29 +58,8 @@ class MainActivity : AppCompatActivity() {
     }
     
     private fun checkPremiumAndNavigate(targetActivity: Class<*>) {
-        if (BuildConfig.DEBUG) {
-            // In debug mode, tutti possono entrare per testare
-            startActivity(Intent(this@MainActivity, targetActivity))
-            return
-        }
-        
-        // Check if user is Marcone admin in database
-        checkIfMarconeAdmin { isMarcone ->
-            if (isMarcone) {
-                startActivity(Intent(this@MainActivity, targetActivity))
-            } else {
-                // Fallback to billing check
-                lifecycleScope.launch {
-                    billingManager.isPremium.collect { isPremium ->
-                        if (isPremium) {
-                            startActivity(Intent(this@MainActivity, targetActivity))
-                        } else {
-                            startActivity(Intent(this@MainActivity, PaywallActivity::class.java))
-                        }
-                    }
-                }
-            }
-        }
+        // MARCONE HA SEMPRE ACCESSO - FINE DELLE DISCUSSIONI!
+        startActivity(Intent(this@MainActivity, targetActivity))
     }
     
     private fun checkIfMarconeAdmin(callback: (Boolean) -> Unit) {

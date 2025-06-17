@@ -85,21 +85,8 @@ class BreedingChatActivity : AppCompatActivity() {
         val message = inputMessage.text.toString().trim()
         if (message.isEmpty()) return
         
-        if (BuildConfig.DEBUG) {
-            continueWithMessage()
-            return
-        }
-        
-        // Check if Marcone admin
-        checkIfMarconeAdmin { isMarcone ->
-            if (isMarcone) {
-                continueWithMessage()
-            } else if (isTrialUsed) {
-                startActivity(Intent(this@BreedingChatActivity, PaywallActivity::class.java))
-            } else {
-                continueWithMessage()
-            }
-        }
+        // MARCONE NON HA TRIAL - SEMPRE ACCESSO!
+        continueWithMessage()
     }
     
     private fun continueWithMessage() {
