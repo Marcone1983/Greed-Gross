@@ -11,8 +11,8 @@
     },
     "user_strains": {
       "$userId": {
-        ".read": "$userId === auth.uid || root.child('admins').child('marcone').val() == true",
-        ".write": "$userId === auth.uid || root.child('admins').child('marcone').val() == true"
+        ".read": "$userId === auth.uid || root.child('admins').child('Marcone').val() == true",
+        ".write": "$userId === auth.uid || root.child('admins').child('Marcone').val() == true"
       }
     },
     "online_users": {

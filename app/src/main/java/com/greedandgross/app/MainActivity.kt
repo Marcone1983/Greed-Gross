@@ -64,19 +64,19 @@ class MainActivity : AppCompatActivity() {
             return
         }
         
-        // HARDCODED: Marcone sempre accesso, altri pagano
-        val isMarcone = true // TODO: Implementare check reale per Marcone
-        
-        if (isMarcone) {
-            startActivity(Intent(this@MainActivity, targetActivity))
-        } else {
-            // Altri utenti - check billing
-            lifecycleScope.launch {
-                billingManager.isPremium.collect { isPremium ->
-                    if (isPremium) {
-                        startActivity(Intent(this@MainActivity, targetActivity))
-                    } else {
-                        startActivity(Intent(this@MainActivity, PaywallActivity::class.java))
+        // Check if user is Marcone admin in database
+        checkIfMarconeAdmin { isMarcone ->
+            if (isMarcone) {
+                startActivity(Intent(this@MainActivity, targetActivity))
+            } else {
+                // Altri utenti - check billing
+                lifecycleScope.launch {
+                    billingManager.isPremium.collect { isPremium ->
+                        if (isPremium) {
+                            startActivity(Intent(this@MainActivity, targetActivity))
+                        } else {
+                            startActivity(Intent(this@MainActivity, PaywallActivity::class.java))
+                        }
                     }
                 }
             }
@@ -93,7 +93,7 @@ class MainActivity : AppCompatActivity() {
         } else {
             // Check Firebase database for admin status
             val database = com.google.firebase.database.FirebaseDatabase.getInstance().reference
-            database.child("admins").child("marcone")
+            database.child("admins").child("Marcone")
                 .addListenerForSingleValueEvent(object : com.google.firebase.database.ValueEventListener {
                     override fun onDataChange(snapshot: com.google.firebase.database.DataSnapshot) {
                         val isAdmin = snapshot.getValue(Boolean::class.java) ?: false

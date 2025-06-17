@@ -85,13 +85,20 @@ class BreedingChatActivity : AppCompatActivity() {
         val message = inputMessage.text.toString().trim()
         if (message.isEmpty()) return
         
-        // HARDCODED: Marcone sempre accesso
-        val isMarcone = true // TODO: Implementare check reale per Marcone
-        
-        if (isMarcone || !isTrialUsed || BuildConfig.DEBUG) {
+        if (BuildConfig.DEBUG) {
             continueWithMessage()
-        } else {
-            startActivity(Intent(this@BreedingChatActivity, PaywallActivity::class.java))
+            return
+        }
+        
+        // Check if Marcone admin
+        checkIfMarconeAdmin { isMarcone ->
+            if (isMarcone) {
+                continueWithMessage()
+            } else if (isTrialUsed) {
+                startActivity(Intent(this@BreedingChatActivity, PaywallActivity::class.java))
+            } else {
+                continueWithMessage()
+            }
         }
     }
     
@@ -398,7 +405,7 @@ class BreedingChatActivity : AppCompatActivity() {
         } else {
             // Check Firebase database for admin status
             val database = FirebaseDatabase.getInstance().reference
-            database.child("admins").child("marcone")
+            database.child("admins").child("Marcone")
                 .addListenerForSingleValueEvent(object : ValueEventListener {
                     override fun onDataChange(snapshot: DataSnapshot) {
                         val isAdmin = snapshot.getValue(Boolean::class.java) ?: false
