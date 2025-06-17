@@ -2,21 +2,21 @@
   "rules": {
     "chat_messages": {
       ".read": "auth != null",
-      ".write": "auth != null || auth.uid === 'BiipQIXcGccp4YcsoeIhulY1tfa2'",
+      ".write": "auth != null || auth.uid === 'eqDvGiUzc6SZQS4FUuvQi0jTMhy1'",
       ".indexOn": ["timestamp"]
     },
     "user_strains": {
-      ".read": "auth != null || auth.uid === 'BiipQIXcGccp4YcsoeIhulY1tfa2'",
-      ".write": "auth.uid === 'BiipQIXcGccp4YcsoeIhulY1tfa2'",
+      ".read": "auth != null || auth.uid === 'eqDvGiUzc6SZQS4FUuvQi0jTMhy1'",
+      ".write": "auth.uid === 'eqDvGiUzc6SZQS4FUuvQi0jTMhy1'",
       "$userId": {
-        ".read": "$userId === auth.uid || auth.uid === 'BiipQIXcGccp4YcsoeIhulY1tfa2'",
-        ".write": "$userId === auth.uid || auth.uid === 'BiipQIXcGccp4YcsoeIhulY1tfa2'"
+        ".read": "$userId === auth.uid || auth.uid === 'eqDvGiUzc6SZQS4FUuvQi0jTMhy1'",
+        ".write": "$userId === auth.uid || auth.uid === 'eqDvGiUzc6SZQS4FUuvQi0jTMhy1'"
       }
     },
     "online_users": {
       ".read": "auth != null",
       "$userId": {
-        ".write": "$userId === auth.uid || auth.uid === 'BiipQIXcGccp4YcsoeIhulY1tfa2'"
+        ".write": "$userId === auth.uid || auth.uid === 'eqDvGiUzc6SZQS4FUuvQi0jTMhy1'"
       }
     }
   }

@@ -15,7 +15,7 @@ import kotlinx.coroutines.launch
 class MainActivity : AppCompatActivity() {
     
     private lateinit var billingManager: BillingManager
-    private val OWNER_UID = "BiipQIXcGccp4YcsoeIhulY1tfa2"
+    private val OWNER_UID = "eqDvGiUzc6SZQS4FUuvQi0jTMhy1"
     
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
