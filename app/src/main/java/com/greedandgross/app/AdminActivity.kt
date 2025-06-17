@@ -47,17 +47,9 @@ class AdminActivity : AppCompatActivity() {
         return if (BuildConfig.DEBUG) {
             true
         } else {
-            // Check Firebase custom claims
-            val currentUser = FirebaseAuth.getInstance().currentUser
-            var isOwner = false
-            
-            currentUser?.getIdToken(false)?.result?.let { result ->
-                isOwner = result.claims["admin"] as? Boolean ?: false ||
-                         result.claims["owner"] as? Boolean ?: false ||
-                         result.claims["marcone"] as? Boolean ?: false
-            }
-            
-            isOwner
+            // Check if Marcone admin in database
+            val prefs = getSharedPreferences("greed_gross_prefs", MODE_PRIVATE)
+            prefs.getBoolean("is_marcone_admin", false)
         }
     }
     

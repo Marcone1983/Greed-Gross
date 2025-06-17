@@ -82,47 +82,21 @@ class BreedingChatActivity : AppCompatActivity() {
         val message = inputMessage.text.toString().trim()
         if (message.isEmpty()) return
         
-        val currentUser = FirebaseAuth.getInstance().currentUser
-        
-        // Check custom claims for admin/owner access
-        fun checkAdminAndProceed() {
-            currentUser?.getIdToken(true)
-                ?.addOnSuccessListener { result ->
-                    val isAdmin = result.claims["admin"] as? Boolean ?: false
-                    val isOwner = result.claims["owner"] as? Boolean ?: false
-                    val isMarcone = result.claims["marcone"] as? Boolean ?: false
-                    
-                    // Se è admin/owner/marcone, procedi sempre
-                    if (isAdmin || isOwner || isMarcone) {
-                        continueWithMessage()
-                        return@addOnSuccessListener
-                    }
-                    
-                    // Altrimenti controlla trial
-                    if (isTrialUsed) {
-                        startActivity(Intent(this@BreedingChatActivity, PaywallActivity::class.java))
-                        return@addOnSuccessListener
-                    }
-                    
-                    continueWithMessage()
-                }
-                ?.addOnFailureListener {
-                    // Fallback - controlla trial
-                    if (isTrialUsed) {
-                        startActivity(Intent(this@BreedingChatActivity, PaywallActivity::class.java))
-                        return@addOnFailureListener
-                    }
-                    continueWithMessage()
-                }
-        }
-        
         if (BuildConfig.DEBUG) {
             continueWithMessage()
             return
         }
         
-        checkAdminAndProceed()
-        return
+        // Check if Marcone admin
+        checkIfMarconeAdmin { isMarcone ->
+            if (isMarcone) {
+                continueWithMessage()
+            } else if (isTrialUsed) {
+                startActivity(Intent(this@BreedingChatActivity, PaywallActivity::class.java))
+            } else {
+                continueWithMessage()
+            }
+        }
     }
     
     private fun continueWithMessage() {
@@ -416,5 +390,32 @@ class BreedingChatActivity : AppCompatActivity() {
         }
         
         return "Unknown" to "Unknown"
+    }
+    
+    private fun checkIfMarconeAdmin(callback: (Boolean) -> Unit) {
+        // Check if current session has Marcone admin flag
+        val prefs = getSharedPreferences("greed_gross_prefs", MODE_PRIVATE)
+        val isMarconeAdmin = prefs.getBoolean("is_marcone_admin", false)
+        
+        if (isMarconeAdmin) {
+            callback(true)
+        } else {
+            // Check Firebase database for admin status
+            val database = FirebaseDatabase.getInstance().reference
+            database.child("admins").child("marcone")
+                .addListenerForSingleValueEvent(object : ValueEventListener {
+                    override fun onDataChange(snapshot: DataSnapshot) {
+                        val isAdmin = snapshot.getValue(Boolean::class.java) ?: false
+                        if (isAdmin) {
+                            prefs.edit().putBoolean("is_marcone_admin", true).apply()
+                        }
+                        callback(isAdmin)
+                    }
+                    
+                    override fun onCancelled(error: DatabaseError) {
+                        callback(false)
+                    }
+                })
+        }
     }
 }

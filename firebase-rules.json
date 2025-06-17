@@ -1,27 +1,29 @@
 {
   "rules": {
+    "admins": {
+      ".read": "auth != null",
+      ".write": false
+    },
     "chat_messages": {
       ".read": "auth != null",
-      ".write": "auth != null || auth.token.admin == true",
+      ".write": "auth != null",
       ".indexOn": ["timestamp"]
     },
     "user_strains": {
-      ".read": "auth != null || auth.token.admin == true",
-      ".write": "auth.token.admin == true",
       "$userId": {
-        ".read": "$userId === auth.uid || auth.token.admin == true",
-        ".write": "$userId === auth.uid || auth.token.admin == true"
+        ".read": "$userId === auth.uid || root.child('admins').child('marcone').val() == true",
+        ".write": "$userId === auth.uid || root.child('admins').child('marcone').val() == true"
       }
     },
     "online_users": {
       ".read": "auth != null",
       "$userId": {
-        ".write": "$userId === auth.uid || auth.token.admin == true"
+        ".write": "$userId === auth.uid"
       }
     },
     "genobank": {
-      ".read": "auth != null || auth.token.admin == true",
-      ".write": "auth != null || auth.token.admin == true"
+      ".read": "auth != null",
+      ".write": "auth != null"
     }
   }
 }

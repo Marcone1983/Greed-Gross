@@ -58,26 +58,17 @@ class MainActivity : AppCompatActivity() {
     }
     
     private fun checkPremiumAndNavigate(targetActivity: Class<*>) {
-        val currentUser = FirebaseAuth.getInstance().currentUser
-        
         if (BuildConfig.DEBUG) {
             // In debug mode, tutti possono entrare per testare
             startActivity(Intent(this@MainActivity, targetActivity))
             return
         }
         
-        // Check Firebase custom claims for admin access
-        currentUser?.getIdToken(true)
-            ?.addOnSuccessListener { result ->
-                val isAdmin = result.claims["admin"] as? Boolean ?: false
-                val isOwner = result.claims["owner"] as? Boolean ?: false
-                val isMarcone = result.claims["marcone"] as? Boolean ?: false
-                
-                if (isAdmin || isOwner || isMarcone) {
-                    startActivity(Intent(this@MainActivity, targetActivity))
-                    return@addOnSuccessListener
-                }
-                
+        // Check if user is Marcone admin in database
+        checkIfMarconeAdmin { isMarcone ->
+            if (isMarcone) {
+                startActivity(Intent(this@MainActivity, targetActivity))
+            } else {
                 // Fallback to billing check
                 lifecycleScope.launch {
                     billingManager.isPremium.collect { isPremium ->
@@ -89,18 +80,34 @@ class MainActivity : AppCompatActivity() {
                     }
                 }
             }
-            ?.addOnFailureListener {
-                // Fallback to billing check if token fails
-                lifecycleScope.launch {
-                    billingManager.isPremium.collect { isPremium ->
-                        if (isPremium) {
-                            startActivity(Intent(this@MainActivity, targetActivity))
-                        } else {
-                            startActivity(Intent(this@MainActivity, PaywallActivity::class.java))
+        }
+    }
+    
+    private fun checkIfMarconeAdmin(callback: (Boolean) -> Unit) {
+        // Check if current session has Marcone admin flag
+        val prefs = getSharedPreferences("greed_gross_prefs", MODE_PRIVATE)
+        val isMarconeAdmin = prefs.getBoolean("is_marcone_admin", false)
+        
+        if (isMarconeAdmin) {
+            callback(true)
+        } else {
+            // Check Firebase database for admin status
+            val database = com.google.firebase.database.FirebaseDatabase.getInstance().reference
+            database.child("admins").child("marcone")
+                .addListenerForSingleValueEvent(object : com.google.firebase.database.ValueEventListener {
+                    override fun onDataChange(snapshot: com.google.firebase.database.DataSnapshot) {
+                        val isAdmin = snapshot.getValue(Boolean::class.java) ?: false
+                        if (isAdmin) {
+                            prefs.edit().putBoolean("is_marcone_admin", true).apply()
                         }
+                        callback(isAdmin)
                     }
-                }
-            }
+                    
+                    override fun onCancelled(error: com.google.firebase.database.DatabaseError) {
+                        callback(false)
+                    }
+                })
+        }
     }
     
     private fun initializeFirebaseAuth() {
