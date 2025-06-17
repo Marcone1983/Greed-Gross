@@ -86,7 +86,7 @@ class BreedingChatActivity : AppCompatActivity() {
         val isOwner = if (BuildConfig.DEBUG) {
             true // In debug tutti possono usare
         } else {
-            currentUser?.uid == "Marcone" // In produzione solo Marcone
+            currentUser?.uid == "BiipQIXcGccp4YcsoeIhulY1tfa2" // In produzione solo Marcone
         }
         
         // Controllo trial: se già usato E non sei il proprietario, mostra paywall
@@ -160,7 +160,7 @@ class BreedingChatActivity : AppCompatActivity() {
             val isOwner = if (BuildConfig.DEBUG) {
                 true // In debug tutti possono usare
             } else {
-                currentUser?.uid == "Marcone" // In produzione solo Marcone
+                currentUser?.uid == "BiipQIXcGccp4YcsoeIhulY1tfa2" // In produzione solo Marcone
             }
             if (!isTrialUsed && !isOwner) {
                 prefs.edit().putBoolean("trial_used", true).apply()

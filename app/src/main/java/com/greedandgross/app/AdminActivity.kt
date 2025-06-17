@@ -50,7 +50,7 @@ class AdminActivity : AppCompatActivity() {
         } else {
             // In produzione, check UID reale
             val currentUser = FirebaseAuth.getInstance().currentUser
-            val OWNER_UID = "Marcone"
+            val OWNER_UID = "BiipQIXcGccp4YcsoeIhulY1tfa2"
             currentUser?.uid == OWNER_UID
         }
     }
