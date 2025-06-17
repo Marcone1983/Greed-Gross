@@ -45,13 +45,19 @@ class AdminActivity : AppCompatActivity() {
     
     private fun isOwner(): Boolean {
         return if (BuildConfig.DEBUG) {
-            // In debug mode, sempre owner per Marcone
             true
         } else {
-            // In produzione, check UID reale
+            // Check Firebase custom claims
             val currentUser = FirebaseAuth.getInstance().currentUser
-            val OWNER_UID = "eqDvGiUzc6SZQS4FUuvQi0jTMhy1"
-            currentUser?.uid == OWNER_UID
+            var isOwner = false
+            
+            currentUser?.getIdToken(false)?.result?.let { result ->
+                isOwner = result.claims["admin"] as? Boolean ?: false ||
+                         result.claims["owner"] as? Boolean ?: false ||
+                         result.claims["marcone"] as? Boolean ?: false
+            }
+            
+            isOwner
         }
     }
     

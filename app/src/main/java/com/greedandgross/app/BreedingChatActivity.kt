@@ -83,17 +83,50 @@ class BreedingChatActivity : AppCompatActivity() {
         if (message.isEmpty()) return
         
         val currentUser = FirebaseAuth.getInstance().currentUser
-        val isOwner = if (BuildConfig.DEBUG) {
-            true // In debug tutti possono usare
-        } else {
-            currentUser?.uid == "eqDvGiUzc6SZQS4FUuvQi0jTMhy1" // In produzione solo Marcone
+        
+        // Check custom claims for admin/owner access
+        fun checkAdminAndProceed() {
+            currentUser?.getIdToken(true)
+                ?.addOnSuccessListener { result ->
+                    val isAdmin = result.claims["admin"] as? Boolean ?: false
+                    val isOwner = result.claims["owner"] as? Boolean ?: false
+                    val isMarcone = result.claims["marcone"] as? Boolean ?: false
+                    
+                    // Se è admin/owner/marcone, procedi sempre
+                    if (isAdmin || isOwner || isMarcone) {
+                        continueWithMessage()
+                        return@addOnSuccessListener
+                    }
+                    
+                    // Altrimenti controlla trial
+                    if (isTrialUsed) {
+                        startActivity(Intent(this@BreedingChatActivity, PaywallActivity::class.java))
+                        return@addOnSuccessListener
+                    }
+                    
+                    continueWithMessage()
+                }
+                ?.addOnFailureListener {
+                    // Fallback - controlla trial
+                    if (isTrialUsed) {
+                        startActivity(Intent(this@BreedingChatActivity, PaywallActivity::class.java))
+                        return@addOnFailureListener
+                    }
+                    continueWithMessage()
+                }
         }
         
-        // Controllo trial: se già usato E non sei il proprietario, mostra paywall
-        if (isTrialUsed && !isOwner) {
-            startActivity(Intent(this, PaywallActivity::class.java))
+        if (BuildConfig.DEBUG) {
+            continueWithMessage()
             return
         }
+        
+        checkAdminAndProceed()
+        return
+    }
+    
+    private fun continueWithMessage() {
+        val message = inputMessage.text.toString().trim()
         
         // Aggiungi messaggio utente
         addMessage(ChatMessage(message, true, System.currentTimeMillis()))

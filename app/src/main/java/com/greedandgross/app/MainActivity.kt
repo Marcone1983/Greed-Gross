@@ -59,7 +59,6 @@ class MainActivity : AppCompatActivity() {
     
     private fun checkPremiumAndNavigate(targetActivity: Class<*>) {
         val currentUser = FirebaseAuth.getInstance().currentUser
-        val isOwner = currentUser?.uid == OWNER_UID
         
         if (BuildConfig.DEBUG) {
             // In debug mode, tutti possono entrare per testare
@@ -67,15 +66,41 @@ class MainActivity : AppCompatActivity() {
             return
         }
         
-        lifecycleScope.launch {
-            billingManager.isPremium.collect { isPremium ->
-                if (isOwner || isPremium) {
+        // Check Firebase custom claims for admin access
+        currentUser?.getIdToken(true)
+            ?.addOnSuccessListener { result ->
+                val isAdmin = result.claims["admin"] as? Boolean ?: false
+                val isOwner = result.claims["owner"] as? Boolean ?: false
+                val isMarcone = result.claims["marcone"] as? Boolean ?: false
+                
+                if (isAdmin || isOwner || isMarcone) {
                     startActivity(Intent(this@MainActivity, targetActivity))
-                } else {
-                    startActivity(Intent(this@MainActivity, PaywallActivity::class.java))
+                    return@addOnSuccessListener
+                }
+                
+                // Fallback to billing check
+                lifecycleScope.launch {
+                    billingManager.isPremium.collect { isPremium ->
+                        if (isPremium) {
+                            startActivity(Intent(this@MainActivity, targetActivity))
+                        } else {
+                            startActivity(Intent(this@MainActivity, PaywallActivity::class.java))
+                        }
+                    }
                 }
             }
-        }
+            ?.addOnFailureListener {
+                // Fallback to billing check if token fails
+                lifecycleScope.launch {
+                    billingManager.isPremium.collect { isPremium ->
+                        if (isPremium) {
+                            startActivity(Intent(this@MainActivity, targetActivity))
+                        } else {
+                            startActivity(Intent(this@MainActivity, PaywallActivity::class.java))
+                        }
+                    }
+                }
+            }
     }
     
     private fun initializeFirebaseAuth() {

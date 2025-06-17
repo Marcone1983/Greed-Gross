@@ -6,10 +6,27 @@ const morgan = require('morgan');
 const rateLimit = require('express-rate-limit');
 const mongoose = require('mongoose');
 const { body, validationResult } = require('express-validator');
+const admin = require('firebase-admin');
 require('dotenv').config();
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+
+// Initialize Firebase Admin
+try {
+  if (process.env.FIREBASE_SERVICE_ACCOUNT) {
+    const serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT);
+    admin.initializeApp({
+      credential: admin.credential.cert(serviceAccount),
+      databaseURL: process.env.FIREBASE_DATABASE_URL || "https://greed-gross-default-rtdb.firebaseio.com"
+    });
+    console.log('✅ Firebase Admin initialized');
+  } else {
+    console.log('⚠️ Firebase Admin not initialized - FIREBASE_SERVICE_ACCOUNT not found');
+  }
+} catch (error) {
+  console.error('❌ Firebase Admin initialization error:', error);
+}
 
 // Security middleware
 app.use(helmet());
@@ -234,6 +251,41 @@ app.get('/api/analytics/popular-strains', async (req, res) => {
     res.json(popularStrains);
   } catch (error) {
     res.status(500).json({ error: 'Failed to fetch analytics' });
+  }
+});
+
+// Admin endpoint to set Marcone as admin
+app.post('/api/admin/setMarcone', async (req, res) => {
+  try {
+    const { uid, secret } = req.body;
+    
+    // Simple security check
+    if (secret !== process.env.ADMIN_SECRET) {
+      return res.status(403).json({ error: 'Unauthorized' });
+    }
+    
+    if (!uid) {
+      return res.status(400).json({ error: 'UID is required' });
+    }
+    
+    // Set custom claims
+    await admin.auth().setCustomUserClaims(uid, { 
+      admin: true,
+      owner: true,
+      marcone: true
+    });
+    
+    console.log(`✅ Set admin claims for UID: ${uid}`);
+    
+    res.json({ 
+      success: true, 
+      message: 'Marcone is now admin!',
+      uid: uid
+    });
+    
+  } catch (error) {
+    console.error('❌ Error setting admin claims:', error);
+    res.status(500).json({ error: 'Failed to set admin claims' });
   }
 });
 

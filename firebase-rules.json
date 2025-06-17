@@ -2,22 +2,26 @@
   "rules": {
     "chat_messages": {
       ".read": "auth != null",
-      ".write": "auth != null || auth.uid === 'eqDvGiUzc6SZQS4FUuvQi0jTMhy1'",
+      ".write": "auth != null || auth.token.admin == true",
       ".indexOn": ["timestamp"]
     },
     "user_strains": {
-      ".read": "auth != null || auth.uid === 'eqDvGiUzc6SZQS4FUuvQi0jTMhy1'",
-      ".write": "auth.uid === 'eqDvGiUzc6SZQS4FUuvQi0jTMhy1'",
+      ".read": "auth != null || auth.token.admin == true",
+      ".write": "auth.token.admin == true",
       "$userId": {
-        ".read": "$userId === auth.uid || auth.uid === 'eqDvGiUzc6SZQS4FUuvQi0jTMhy1'",
-        ".write": "$userId === auth.uid || auth.uid === 'eqDvGiUzc6SZQS4FUuvQi0jTMhy1'"
+        ".read": "$userId === auth.uid || auth.token.admin == true",
+        ".write": "$userId === auth.uid || auth.token.admin == true"
       }
     },
     "online_users": {
       ".read": "auth != null",
       "$userId": {
-        ".write": "$userId === auth.uid || auth.uid === 'eqDvGiUzc6SZQS4FUuvQi0jTMhy1'"
+        ".write": "$userId === auth.uid || auth.token.admin == true"
       }
+    },
+    "genobank": {
+      ".read": "auth != null || auth.token.admin == true",
+      ".write": "auth != null || auth.token.admin == true"
     }
   }
 }
