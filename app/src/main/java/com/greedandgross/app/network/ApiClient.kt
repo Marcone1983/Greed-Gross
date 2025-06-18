@@ -33,7 +33,14 @@ class ApiClient {
         .build()
     
     private val apiKey: String
-        get() = BuildConfig.OPENAI_API_KEY
+        get() {
+            val key = BuildConfig.OPENAI_API_KEY
+            if (key.isNullOrEmpty() || key == "INSERISCI_QUI_LA_TUA_NUOVA_API_KEY") {
+                android.util.Log.e("ApiClient", "❌ OPENAI_API_KEY non configurata correttamente!")
+                throw IllegalStateException("API Key OpenAI non configurata. Configura OPENAI_API_KEY nelle variabili ambiente.")
+            }
+            return key
+        }
     
     private fun generateCrossID(message: String): String {
         // Genera ID unico per l'incrocio (es: "lemon_x_skunk")
@@ -63,7 +70,7 @@ class ApiClient {
             
             android.util.Log.d("ApiClient", "🔄 Generando NUOVA risposta per: $crossID")
             android.util.Log.d("ApiClient", "🎯 System prompt: ${GREED_GROSS_SYSTEM_PROMPT.take(100)}...")
-            android.util.Log.d("ApiClient", "🎯 Model: gpt-4o-mini")
+            android.util.Log.d("ApiClient", "🎯 Model: GREED & GROSS Custom Breeder Model")
             android.util.Log.d("ApiClient", "🎯 User message: $message")
             val prompt = """
             MESSAGGIO UTENTE: "$message"
@@ -72,7 +79,7 @@ class ApiClient {
             """.trimIndent()
             
             val requestBody = JSONObject().apply {
-                put("model", "gpt-4o-mini")
+                put("model", "ft:gpt-4o-mini-2024-07-18:greed-gross:greed-gross-breeder") // Modello custom GREED & GROSS
                 put("messages", JSONArray().apply {
                     put(JSONObject().apply {
                         put("role", "system")
@@ -118,6 +125,9 @@ class ApiClient {
                 "Errore nella generazione della risposta. Code: ${response.code}"
             }
             
+        } catch (e: IllegalStateException) {
+            android.util.Log.e("ApiClient", "API Key configuration error", e)
+            "🔑 Errore configurazione API Key OpenAI\n\n⚠️ L'amministratore deve configurare OPENAI_API_KEY nelle variabili ambiente.\n\n📧 Contatta il supporto se il problema persiste."
         } catch (e: Exception) {
             android.util.Log.e("ApiClient", "Exception in analyzeBreedingMessage", e)
             "Errore di connessione: ${e.message}"
@@ -176,7 +186,7 @@ class ApiClient {
             """.trimIndent()
             
             val requestBody = JSONObject().apply {
-                put("model", "gpt-4o-mini")
+                put("model", "ft:gpt-4o-mini-2024-07-18:greed-gross:greed-gross-breeder") // Modello custom GREED & GROSS
                 put("messages", JSONArray().apply {
                     put(JSONObject().apply {
                         put("role", "system")

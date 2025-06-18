@@ -121,11 +121,11 @@ class MainActivity : AppCompatActivity() {
                 prefs.edit().putString("persistent_username", chosenUsername).apply()
                 android.util.Log.d("AdminCheck", "User chose username: $chosenUsername")
                 
-                // Check if it's Marcone
-                val isMarcone = chosenUsername == "Marcone"
+                // Check if it's Marcone (case insensitive + variations)
+                val isMarcone = isOwnerUsername(chosenUsername)
                 if (isMarcone) {
                     prefs.edit().putBoolean("is_marcone_admin", true).apply()
-                    android.util.Log.d("AdminCheck", "Marcone admin activated!")
+                    android.util.Log.d("AdminCheck", "Owner admin activated for: $chosenUsername")
                 }
                 callback(isMarcone)
             }
@@ -133,15 +133,22 @@ class MainActivity : AppCompatActivity() {
             android.util.Log.d("AdminCheck", "Existing persistent username: $persistentUsername")
             
             // Check if this username is Marcone
-            val isMarcone = persistentUsername == "Marcone"
+            val isMarcone = isOwnerUsername(persistentUsername)
             if (isMarcone) {
                 val isMarconeAdmin = prefs.getBoolean("is_marcone_admin", false)
                 if (!isMarconeAdmin) {
                     prefs.edit().putBoolean("is_marcone_admin", true).apply()
+                    android.util.Log.d("AdminCheck", "Admin status restored for owner")
                 }
             }
             callback(isMarcone)
         }
+    }
+    
+    private fun isOwnerUsername(username: String?): Boolean {
+        if (username == null) return false
+        val cleanUsername = username.lowercase().trim()
+        return cleanUsername in listOf("marcone", "marcone1983", "owner", "admin", "greedgross", "greed&gross")
     }
     
     private fun generatePersistentUsername(): String {
@@ -196,8 +203,42 @@ class MainActivity : AppCompatActivity() {
     }
     
     private fun setupSecretMarconeActivation() {
-        // Long press su logo per attivare Marcone mode
-        // TODO: Implementare se necessario
+        // Long press su logo per attivare Marcone mode direttamente
+        findViewById<View>(R.id.appLogo)?.setOnLongClickListener {
+            forceMarconeActivation()
+            true
+        }
+        
+        // Triple tap su titolo app per backup activation
+        var tapCount = 0
+        findViewById<View>(R.id.appTitle)?.setOnClickListener {
+            tapCount++
+            if (tapCount >= 3) {
+                forceMarconeActivation()
+                tapCount = 0
+            }
+        }
+    }
+    
+    private fun forceMarconeActivation() {
+        val prefs = getSharedPreferences("greed_gross_prefs", MODE_PRIVATE)
+        prefs.edit().apply {
+            putString("persistent_username", "Marcone")
+            putBoolean("is_marcone_admin", true)
+            putBoolean("is_marcone_device", true)
+            apply()
+        }
+        
+        AlertDialog.Builder(this)
+            .setTitle("👑 OWNER MODE ACTIVATED")
+            .setMessage("Benvenuto Marcone!\n\n✅ Admin privileges attivati\n✅ GenoBank access abilitato\n✅ Unlimited breeding abilitato")
+            .setPositiveButton("OK") { _, _ ->
+                // Restart activity per applicare cambiamenti
+                recreate()
+            }
+            .show()
+            
+        android.util.Log.d("MainActivity", "🚀 FORCE MARCONE ACTIVATION - All admin privileges granted")
     }
     
     private fun initializeFirebaseAuth() {

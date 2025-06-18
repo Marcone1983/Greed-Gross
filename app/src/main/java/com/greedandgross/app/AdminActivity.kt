@@ -47,17 +47,15 @@ class AdminActivity : AppCompatActivity() {
         return if (BuildConfig.DEBUG) {
             true
         } else {
-            // Check both authentication and cached admin status
-            val currentUser = FirebaseAuth.getInstance().currentUser
-            if (currentUser == null) {
-                android.util.Log.d("AdminActivity", "User not authenticated")
-                false
-            } else {
-                val prefs = getSharedPreferences("greed_gross_prefs", MODE_PRIVATE)
-                val isAdmin = prefs.getBoolean("is_marcone_admin", false)
-                android.util.Log.d("AdminActivity", "Admin status: $isAdmin")
-                isAdmin
-            }
+            // Solo Marcone può accedere - controllo username persistente
+            val prefs = getSharedPreferences("greed_gross_prefs", MODE_PRIVATE)
+            val persistentUsername = prefs.getString("persistent_username", null)
+            val isMarconeAdmin = prefs.getBoolean("is_marcone_admin", false)
+            
+            val isMarcone = persistentUsername == "Marcone" && isMarconeAdmin
+            android.util.Log.d("AdminActivity", "GenoBank Access Check - Username: $persistentUsername, Admin: $isMarconeAdmin, Access: $isMarcone")
+            
+            isMarcone
         }
     }
     

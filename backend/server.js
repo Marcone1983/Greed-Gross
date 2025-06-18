@@ -31,14 +31,14 @@ try {
 // Security middleware
 app.use(helmet());
 app.use(cors({
-  origin: process.env.ALLOWED_ORIGINS?.split(',') || ['http://localhost:3000'],
+  origin: process.env.ALLOWED_ORIGINS?.split(',') || ['https://greed-gross.web.app', 'https://greed-gross.firebaseapp.com'],
   credentials: true
 }));
 
 // Rate limiting
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 100, // limit each IP to 100 requests per windowMs
+  max: 30, // limit each IP to 30 requests per windowMs (più sicuro)
   message: {
     error: 'Too many requests from this IP, please try again later.'
   }
@@ -254,13 +254,15 @@ app.get('/api/analytics/popular-strains', async (req, res) => {
   }
 });
 
-// Admin endpoint to set Marcone as admin
+// Admin endpoint to set Marcone as admin  
 app.post('/api/admin/setMarcone', async (req, res) => {
   try {
     const { uid, secret } = req.body;
+    const clientIP = req.ip || req.connection.remoteAddress;
     
-    // Simple security check
-    if (secret !== process.env.ADMIN_SECRET) {
+    // Enhanced security check
+    if (secret !== process.env.ADMIN_SECRET || !process.env.ADMIN_SECRET) {
+      console.log(`❌ Unauthorized admin access attempt from IP: ${clientIP}`);
       return res.status(403).json({ error: 'Unauthorized' });
     }
     

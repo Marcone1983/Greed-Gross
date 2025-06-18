@@ -193,23 +193,36 @@ class BreedingChatActivity : AppCompatActivity() {
                 ))
             }
             
-            // Marca trial come usato 
-            val currentUser = FirebaseAuth.getInstance().currentUser
+            // Marca trial come usato e blocca accesso futuro
+            val prefs = getSharedPreferences("greed_gross_prefs", MODE_PRIVATE)
             val isOwner = if (BuildConfig.DEBUG) {
                 true // In debug tutti possono usare
             } else {
-                currentUser?.uid == "eqDvGiUzc6SZQS4FUuvQi0jTMhy1" // In produzione solo Marcone
+                // Controllo username persistente per Marcone
+                val persistentUsername = prefs.getString("persistent_username", null)
+                val isMarconeAdmin = prefs.getBoolean("is_marcone_admin", false)
+                persistentUsername == "Marcone" && isMarconeAdmin
             }
-            if (!isTrialUsed && !isOwner) {
-                prefs.edit().putBoolean("trial_used", true).apply()
-                isTrialUsed = true
-                
-                // Messaggio di avviso trial finito
-                addMessage(ChatMessage(
-                    "🎁 Prova gratuita terminata!\n💎 Abbonati per incroci illimitati con AI.",
-                    false,
-                    System.currentTimeMillis()
-                ))
+            
+            // Solo per utenti NON owner: marca trial come usato DOPO il primo incrocio
+            if (!isOwner) {
+                if (!isTrialUsed) {
+                    // Primo incrocio - marca trial come usato
+                    prefs.edit().putBoolean("trial_used", true).apply()
+                    isTrialUsed = true
+                    
+                    // Messaggio di avviso trial finito
+                    addMessage(ChatMessage(
+                        "🎁 Prova gratuita terminata!\n💎 Per incroci illimitati, abbonati ora!",
+                        false,
+                        System.currentTimeMillis()
+                    ))
+                    
+                    // Disabilita input per evitare ulteriori messaggi
+                    sendButton.isEnabled = false
+                    inputMessage.isEnabled = false
+                    inputMessage.hint = "Abbonati per continuare..."
+                }
             }
             
             loadingIndicator.visibility = View.GONE
