@@ -17,6 +17,7 @@ import kotlin.random.Random
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.launch
 import com.greedandgross.app.utils.LanguageManager
+import android.content.Intent
 
 class GlobalChatActivity : AppCompatActivity() {
     
@@ -37,10 +38,36 @@ class GlobalChatActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_global_chat)
         
+        // Check permissions first
+        if (!checkUserPermissions()) {
+            startActivity(Intent(this, PaywallActivity::class.java))
+            finish()
+            return
+        }
+        
         setupFirebase()
         setupViews()
         setupRecyclerView()
         authenticateUser()
+    }
+    
+    private fun checkUserPermissions(): Boolean {
+        val prefs = getSharedPreferences("greed_gross_prefs", MODE_PRIVATE)
+        val username = prefs.getString("persistent_username", null)
+        
+        // Marcone ha sempre accesso
+        if (username == "Marcone") {
+            return true
+        }
+        
+        // In debug mode tutti possono accedere
+        if (BuildConfig.DEBUG) {
+            return true
+        }
+        
+        // Altri utenti devono essere premium
+        // TODO: Implementare check premium Firebase/billing
+        return false
     }
     
     private fun setupFirebase() {

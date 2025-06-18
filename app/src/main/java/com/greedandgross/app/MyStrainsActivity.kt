@@ -12,6 +12,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import com.greedandgross.app.adapters.MyStrainsAdapter
 import com.greedandgross.app.models.SavedStrain
+import android.content.Intent
 
 class MyStrainsActivity : AppCompatActivity() {
     
@@ -29,10 +30,36 @@ class MyStrainsActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_my_strains)
         
+        // Check permissions first
+        if (!checkUserPermissions()) {
+            startActivity(Intent(this, PaywallActivity::class.java))
+            finish()
+            return
+        }
+        
         setupFirebase()
         setupViews()
         setupRecyclerView()
         loadMyStrains()
+    }
+    
+    private fun checkUserPermissions(): Boolean {
+        val prefs = getSharedPreferences("greed_gross_prefs", MODE_PRIVATE)
+        val username = prefs.getString("persistent_username", null)
+        
+        // Marcone ha sempre accesso
+        if (username == "Marcone") {
+            return true
+        }
+        
+        // In debug mode tutti possono accedere
+        if (BuildConfig.DEBUG) {
+            return true
+        }
+        
+        // Altri utenti devono essere premium
+        // TODO: Implementare check premium Firebase/billing
+        return false
     }
     
     private fun setupFirebase() {

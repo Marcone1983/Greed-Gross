@@ -114,19 +114,23 @@ class BreedingChatActivity : AppCompatActivity() {
     }
     
     private fun checkBreedingAccess() {
-        // Check if Marcone admin
-        checkIfMarconeAdmin { isMarcone ->
-            android.util.Log.d("BreedingChat", "Admin check result: $isMarcone")
-            if (isMarcone) {
-                android.util.Log.d("BreedingChat", "Marcone admin - unlimited access")
-                continueWithMessage()
-            } else if (isTrialUsed) {
-                android.util.Log.d("BreedingChat", "Trial used - showing paywall")
-                startActivity(Intent(this@BreedingChatActivity, PaywallActivity::class.java))
-            } else {
-                android.util.Log.d("BreedingChat", "Trial available - continuing")
-                continueWithMessage()
-            }
+        // Check username-based permissions
+        val prefs = getSharedPreferences("greed_gross_prefs", MODE_PRIVATE)
+        val username = prefs.getString("persistent_username", null)
+        
+        android.util.Log.d("BreedingChat", "Checking access for username: $username")
+        
+        if (username == "Marcone") {
+            android.util.Log.d("BreedingChat", "Marcone admin - unlimited access")
+            continueWithMessage()
+        } else if (isTrialUsed) {
+            android.util.Log.d("BreedingChat", "Trial used - showing paywall")
+            startActivity(Intent(this@BreedingChatActivity, PaywallActivity::class.java))
+            finish()
+        } else {
+            android.util.Log.d("BreedingChat", "Trial available - continuing")
+            continueWithMessage()
+        }
         }
     }
     
@@ -193,14 +197,13 @@ class BreedingChatActivity : AppCompatActivity() {
                 ))
             }
             
-            // Marca trial come usato 
-            val currentUser = FirebaseAuth.getInstance().currentUser
-            val isOwner = if (BuildConfig.DEBUG) {
-                true // In debug tutti possono usare
-            } else {
-                currentUser?.uid == "eqDvGiUzc6SZQS4FUuvQi0jTMhy1" // In produzione solo Marcone
-            }
-            if (!isTrialUsed && !isOwner) {
+            // Marca trial come usato (solo se non è Marcone)
+            val prefs = getSharedPreferences("greed_gross_prefs", MODE_PRIVATE)
+            val username = prefs.getString("persistent_username", null)
+            val isMarcone = username == "Marcone"
+            val isDebugMode = BuildConfig.DEBUG
+            
+            if (!isTrialUsed && !isMarcone && !isDebugMode) {
                 prefs.edit().putBoolean("trial_used", true).apply()
                 isTrialUsed = true
                 
@@ -210,6 +213,12 @@ class BreedingChatActivity : AppCompatActivity() {
                     false,
                     System.currentTimeMillis()
                 ))
+                
+                // Mostra paywall dopo 3 secondi
+                android.os.Handler(android.os.Looper.getMainLooper()).postDelayed({
+                    startActivity(Intent(this@BreedingChatActivity, PaywallActivity::class.java))
+                    finish()
+                }, 3000)
             }
             
             loadingIndicator.visibility = View.GONE
