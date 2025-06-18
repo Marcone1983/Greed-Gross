@@ -125,6 +125,7 @@ class MainActivity : AppCompatActivity() {
                 val isMarcone = chosenUsername == "Marcone"
                 if (isMarcone) {
                     prefs.edit().putBoolean("is_marcone_admin", true).apply()
+                    android.util.Log.d("AdminCheck", "Marcone admin activated!")
                 }
                 callback(isMarcone)
             }
