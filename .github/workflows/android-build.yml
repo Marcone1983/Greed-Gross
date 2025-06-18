@@ -1,5 +1,11 @@
 name: 🚀 Android Build & Release
 
+permissions:
+  contents: write
+  security-events: write
+  actions: read
+  id-token: write
+
 on:
   push:
     branches: [ main, production ]
@@ -55,6 +61,9 @@ jobs:
     name: 🚀 Build Release APK
     runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/production' || startsWith(github.ref, 'refs/tags/')
+    permissions:
+      contents: write
+      actions: read
     
     steps:
     - name: 📥 Checkout
@@ -129,6 +138,10 @@ jobs:
   security-scan:
     name: 🛡️ Security Scan
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      security-events: write
+      actions: read
     
     steps:
     - name: 📥 Checkout
