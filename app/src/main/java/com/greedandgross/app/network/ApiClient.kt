@@ -62,6 +62,9 @@ class ApiClient {
             }
             
             android.util.Log.d("ApiClient", "🔄 Generando NUOVA risposta per: $crossID")
+            android.util.Log.d("ApiClient", "🎯 System prompt: ${GREED_GROSS_SYSTEM_PROMPT.take(100)}...")
+            android.util.Log.d("ApiClient", "🎯 Model: gpt-4o-mini")
+            android.util.Log.d("ApiClient", "🎯 User message: $message")
             val prompt = """
             MESSAGGIO UTENTE: "$message"
             
