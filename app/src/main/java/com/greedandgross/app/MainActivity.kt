@@ -15,7 +15,6 @@ import kotlinx.coroutines.launch
 class MainActivity : AppCompatActivity() {
     
     private lateinit var billingManager: BillingManager
-    private val OWNER_UID = "eqDvGiUzc6SZQS4FUuvQi0jTMhy1"
     
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -65,81 +64,110 @@ class MainActivity : AppCompatActivity() {
             return
         }
         
-        // Ensure user is authenticated before checking admin status
-        val currentUser = FirebaseAuth.getInstance().currentUser
-        if (currentUser == null) {
-            android.util.Log.d("MainActivity", "User not authenticated, signing in...")
-            // Wait for authentication
-            FirebaseAuth.getInstance().signInAnonymously()
-                .addOnSuccessListener {
-                    android.util.Log.d("MainActivity", "Auth successful, checking admin...")
-                    checkIfMarconeAdmin { isMarcone ->
-                        navigateBasedOnStatus(isMarcone, targetActivity)
-                    }
-                }
-                .addOnFailureListener { error ->
-                    android.util.Log.e("MainActivity", "Auth failed: ${error.message}")
-                    // Auth failed, go to paywall
-                    startActivity(Intent(this@MainActivity, PaywallActivity::class.java))
-                }
-        } else {
-            android.util.Log.d("MainActivity", "User already authenticated, checking admin...")
-            checkIfMarconeAdmin { isMarcone ->
-                navigateBasedOnStatus(isMarcone, targetActivity)
+        // Check username-based permissions
+        checkUserPermissions { hasAccess ->
+            if (hasAccess) {
+                startActivity(Intent(this@MainActivity, targetActivity))
+            } else {
+                startActivity(Intent(this@MainActivity, PaywallActivity::class.java))
             }
         }
     }
     
-    private fun navigateBasedOnStatus(isMarcone: Boolean, targetActivity: Class<*>) {
-        if (isMarcone) {
-            android.util.Log.d("MainActivity", "Marcone admin confirmed - full access")
-            startActivity(Intent(this@MainActivity, targetActivity))
-        } else {
-            android.util.Log.d("MainActivity", "Not Marcone admin - checking billing")
-            // Altri utenti - check billing
-            lifecycleScope.launch {
-                billingManager.isPremium.collect { isPremium ->
-                    if (isPremium) {
-                        startActivity(Intent(this@MainActivity, targetActivity))
-                    } else {
-                        startActivity(Intent(this@MainActivity, PaywallActivity::class.java))
-                    }
-                }
-            }
-        }
-    }
-    
-    private fun checkIfMarconeAdmin(callback: (Boolean) -> Unit) {
+    private fun checkUserPermissions(callback: (Boolean) -> Unit) {
         val prefs = getSharedPreferences("greed_gross_prefs", MODE_PRIVATE)
+        val username = prefs.getString("persistent_username", null)
         
-        // Get or create persistent username
-        val persistentUsername = prefs.getString("persistent_username", null)
+        if (username == null) {
+            // First time - get username from user
+            getUsernameFromPrefsOrDialog { finalUsername ->
+                checkPermissionsForUsername(finalUsername, callback)
+            }
+        } else {
+            checkPermissionsForUsername(username, callback)
+        }
+    }
+    
+    private fun checkPermissionsForUsername(username: String, callback: (Boolean) -> Unit) {
+        android.util.Log.d("MainActivity", "Checking permissions for username: $username")
         
-        if (persistentUsername == null) {
-            // First time - ask user to choose username
+        // Check if Marcone admin
+        if (username == "Marcone") {
+            android.util.Log.d("MainActivity", "Marcone admin confirmed - full access")
+            callback(true)
+            return
+        }
+        
+        // Check if premium user based on username
+        checkIfPremiumUser(username) { isPremium ->
+            android.util.Log.d("MainActivity", "User $username premium status: $isPremium")
+            callback(isPremium)
+        }
+    }
+    
+    private fun checkIfPremiumUser(username: String, callback: (Boolean) -> Unit) {
+        // Check local premium status first
+        lifecycleScope.launch {
+            billingManager.isPremium.collect { isPremium ->
+                if (isPremium) {
+                    // User has active premium - save to Firebase for persistence
+                    savePremiumStatusToFirebase(username, true)
+                    callback(true)
+                } else {
+                    // Check Firebase for premium status
+                    checkPremiumStatusFromFirebase(username, callback)
+                }
+            }
+        }
+    }
+    
+    private fun savePremiumStatusToFirebase(username: String, isPremium: Boolean) {
+        val database = com.google.firebase.database.FirebaseDatabase.getInstance()
+        val premiumRef = database.getReference("premium_users").child(username)
+        
+        val premiumData = mapOf(
+            "isPremium" to isPremium,
+            "lastUpdated" to System.currentTimeMillis(),
+            "platform" to "android"
+        )
+        
+        premiumRef.setValue(premiumData)
+            .addOnSuccessListener {
+                android.util.Log.d("MainActivity", "Premium status saved for $username")
+            }
+            .addOnFailureListener { error ->
+                android.util.Log.e("MainActivity", "Failed to save premium status: ${error.message}")
+            }
+    }
+    
+    private fun checkPremiumStatusFromFirebase(username: String, callback: (Boolean) -> Unit) {
+        val database = com.google.firebase.database.FirebaseDatabase.getInstance()
+        val premiumRef = database.getReference("premium_users").child(username)
+        
+        premiumRef.get()
+            .addOnSuccessListener { snapshot ->
+                val isPremium = snapshot.child("isPremium").getValue(Boolean::class.java) ?: false
+                android.util.Log.d("MainActivity", "Firebase premium status for $username: $isPremium")
+                callback(isPremium)
+            }
+            .addOnFailureListener { error ->
+                android.util.Log.e("MainActivity", "Failed to check premium status: ${error.message}")
+                callback(false)
+            }
+    }
+    
+    private fun getUsernameFromPrefsOrDialog(callback: (String) -> Unit) {
+        val prefs = getSharedPreferences("greed_gross_prefs", MODE_PRIVATE)
+        val username = prefs.getString("persistent_username", null)
+        
+        if (username != null) {
+            callback(username)
+        } else {
             showUsernameDialog { chosenUsername ->
                 prefs.edit().putString("persistent_username", chosenUsername).apply()
-                android.util.Log.d("AdminCheck", "User chose username: $chosenUsername")
-                
-                // Check if it's Marcone
-                val isMarcone = chosenUsername == "Marcone"
-                if (isMarcone) {
-                    prefs.edit().putBoolean("is_marcone_admin", true).apply()
-                }
-                callback(isMarcone)
+                android.util.Log.d("MainActivity", "User chose username: $chosenUsername")
+                callback(chosenUsername)
             }
-        } else {
-            android.util.Log.d("AdminCheck", "Existing persistent username: $persistentUsername")
-            
-            // Check if this username is Marcone
-            val isMarcone = persistentUsername == "Marcone"
-            if (isMarcone) {
-                val isMarconeAdmin = prefs.getBoolean("is_marcone_admin", false)
-                if (!isMarconeAdmin) {
-                    prefs.edit().putBoolean("is_marcone_admin", true).apply()
-                }
-            }
-            callback(isMarcone)
         }
     }
     
