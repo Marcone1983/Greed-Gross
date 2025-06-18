@@ -47,9 +47,17 @@ class AdminActivity : AppCompatActivity() {
         return if (BuildConfig.DEBUG) {
             true
         } else {
-            // Check if Marcone admin in database
-            val prefs = getSharedPreferences("greed_gross_prefs", MODE_PRIVATE)
-            prefs.getBoolean("is_marcone_admin", false)
+            // Check both authentication and cached admin status
+            val currentUser = FirebaseAuth.getInstance().currentUser
+            if (currentUser == null) {
+                android.util.Log.d("AdminActivity", "User not authenticated")
+                false
+            } else {
+                val prefs = getSharedPreferences("greed_gross_prefs", MODE_PRIVATE)
+                val isAdmin = prefs.getBoolean("is_marcone_admin", false)
+                android.util.Log.d("AdminActivity", "Admin status: $isAdmin")
+                isAdmin
+            }
         }
     }
     
