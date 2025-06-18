@@ -424,49 +424,27 @@ class BreedingChatActivity : AppCompatActivity() {
     }
     
     private fun checkIfMarconeAdmin(callback: (Boolean) -> Unit) {
-        // First verify user is authenticated
-        val currentUser = FirebaseAuth.getInstance().currentUser
-        if (currentUser == null) {
-            android.util.Log.d("AdminCheck", "User not authenticated")
-            callback(false)
-            return
-        }
-        
-        android.util.Log.d("AdminCheck", "User authenticated: ${currentUser.uid}")
-        
-        // Check if current session has Marcone admin flag
         val prefs = getSharedPreferences("greed_gross_prefs", MODE_PRIVATE)
-        val isMarconeAdmin = prefs.getBoolean("is_marcone_admin", false)
         
-        android.util.Log.d("AdminCheck", "Cached admin status: $isMarconeAdmin")
+        // Check persistent username instead of Firebase UID
+        val persistentUsername = prefs.getString("persistent_username", null)
         
-        if (isMarconeAdmin) {
-            callback(true)
+        if (persistentUsername == null) {
+            // Username not set yet, not admin
+            android.util.Log.d("AdminCheck", "No persistent username set")
+            callback(false)
         } else {
-            // Check Firebase database for admin status
-            android.util.Log.d("AdminCheck", "Checking Firebase database...")
-            val database = FirebaseDatabase.getInstance().reference
-            database.child("admins").child("Marcone")
-                .addListenerForSingleValueEvent(object : ValueEventListener {
-                    override fun onDataChange(snapshot: DataSnapshot) {
-                        android.util.Log.d("AdminCheck", "Firebase snapshot exists: ${snapshot.exists()}")
-                        android.util.Log.d("AdminCheck", "Firebase snapshot value: ${snapshot.value}")
-                        
-                        val isAdmin = snapshot.getValue(Boolean::class.java) ?: false
-                        android.util.Log.d("AdminCheck", "Is admin: $isAdmin")
-                        
-                        if (isAdmin) {
-                            prefs.edit().putBoolean("is_marcone_admin", true).apply()
-                            android.util.Log.d("AdminCheck", "Admin status cached")
-                        }
-                        callback(isAdmin)
-                    }
-                    
-                    override fun onCancelled(error: DatabaseError) {
-                        android.util.Log.e("AdminCheck", "Database error: ${error.message}")
-                        callback(false)
-                    }
-                })
+            android.util.Log.d("AdminCheck", "Persistent username: $persistentUsername")
+            
+            // Check if this username is Marcone
+            val isMarcone = persistentUsername == "Marcone"
+            if (isMarcone) {
+                val isMarconeAdmin = prefs.getBoolean("is_marcone_admin", false)
+                if (!isMarconeAdmin) {
+                    prefs.edit().putBoolean("is_marcone_admin", true).apply()
+                }
+            }
+            callback(isMarcone)
         }
     }
 }

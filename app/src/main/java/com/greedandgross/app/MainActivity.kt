@@ -29,6 +29,7 @@ class MainActivity : AppCompatActivity() {
         billingManager.startConnection()
         
         setupClickListeners()
+        setupSecretMarconeActivation()
     }
     
     private fun setupClickListeners() {
@@ -109,50 +110,93 @@ class MainActivity : AppCompatActivity() {
     }
     
     private fun checkIfMarconeAdmin(callback: (Boolean) -> Unit) {
-        // First verify user is authenticated
-        val currentUser = FirebaseAuth.getInstance().currentUser
-        if (currentUser == null) {
-            android.util.Log.d("AdminCheck", "User not authenticated")
-            callback(false)
-            return
-        }
-        
-        android.util.Log.d("AdminCheck", "User authenticated: ${currentUser.uid}")
-        
-        // Check if current session has Marcone admin flag
         val prefs = getSharedPreferences("greed_gross_prefs", MODE_PRIVATE)
-        val isMarconeAdmin = prefs.getBoolean("is_marcone_admin", false)
         
-        android.util.Log.d("AdminCheck", "Cached admin status: $isMarconeAdmin")
+        // Get or create persistent username
+        val persistentUsername = prefs.getString("persistent_username", null)
         
-        if (isMarconeAdmin) {
-            callback(true)
+        if (persistentUsername == null) {
+            // First time - ask user to choose username
+            showUsernameDialog { chosenUsername ->
+                prefs.edit().putString("persistent_username", chosenUsername).apply()
+                android.util.Log.d("AdminCheck", "User chose username: $chosenUsername")
+                
+                // Check if it's Marcone
+                val isMarcone = chosenUsername == "Marcone"
+                if (isMarcone) {
+                    prefs.edit().putBoolean("is_marcone_admin", true).apply()
+                }
+                callback(isMarcone)
+            }
         } else {
-            // Check Firebase database for admin status
-            android.util.Log.d("AdminCheck", "Checking Firebase database...")
-            val database = com.google.firebase.database.FirebaseDatabase.getInstance().reference
-            database.child("admins").child("Marcone")
-                .addListenerForSingleValueEvent(object : com.google.firebase.database.ValueEventListener {
-                    override fun onDataChange(snapshot: com.google.firebase.database.DataSnapshot) {
-                        android.util.Log.d("AdminCheck", "Firebase snapshot exists: ${snapshot.exists()}")
-                        android.util.Log.d("AdminCheck", "Firebase snapshot value: ${snapshot.value}")
-                        
-                        val isAdmin = snapshot.getValue(Boolean::class.java) ?: false
-                        android.util.Log.d("AdminCheck", "Is admin: $isAdmin")
-                        
-                        if (isAdmin) {
-                            prefs.edit().putBoolean("is_marcone_admin", true).apply()
-                            android.util.Log.d("AdminCheck", "Admin status cached")
-                        }
-                        callback(isAdmin)
-                    }
-                    
-                    override fun onCancelled(error: com.google.firebase.database.DatabaseError) {
-                        android.util.Log.e("AdminCheck", "Database error: ${error.message}")
-                        callback(false)
-                    }
-                })
+            android.util.Log.d("AdminCheck", "Existing persistent username: $persistentUsername")
+            
+            // Check if this username is Marcone
+            val isMarcone = persistentUsername == "Marcone"
+            if (isMarcone) {
+                val isMarconeAdmin = prefs.getBoolean("is_marcone_admin", false)
+                if (!isMarconeAdmin) {
+                    prefs.edit().putBoolean("is_marcone_admin", true).apply()
+                }
+            }
+            callback(isMarcone)
         }
+    }
+    
+    private fun generatePersistentUsername(): String {
+        // Simple check - if this is the first install and they want to be Marcone
+        // For now return random, but could be modified for special cases
+        val adjectives = listOf("Expert", "Master", "Pro", "Elite", "Legendary")
+        val nouns = listOf("Breeder", "Grower", "Cultivator", "Geneticist", "Farmer")
+        val number = kotlin.random.Random.nextInt(1000, 9999)
+        
+        // SPECIAL: If device has specific marker, return "Marcone"
+        val prefs = getSharedPreferences("greed_gross_prefs", MODE_PRIVATE)
+        val isMarconeDevice = prefs.getBoolean("is_marcone_device", false)
+        
+        return if (isMarconeDevice) {
+            "Marcone"
+        } else {
+            "${adjectives.random()}${nouns.random()}_$number"
+        }
+    }
+    
+    private fun showUsernameDialog(callback: (String) -> Unit) {
+        val input = EditText(this)
+        input.hint = "Inserisci il tuo username"
+        
+        AlertDialog.Builder(this)
+            .setTitle("🌿 Benvenuto in Greed & Gross!")
+            .setMessage("Scegli il tuo username per la community:")
+            .setView(input)
+            .setPositiveButton("Conferma") { _, _ ->
+                val username = input.text.toString().trim()
+                if (username.isNotEmpty()) {
+                    callback(username)
+                } else {
+                    // Se vuoto, genera random
+                    val randomUsername = generateRandomUsername()
+                    callback(randomUsername)
+                }
+            }
+            .setNegativeButton("Random") { _, _ ->
+                val randomUsername = generateRandomUsername()
+                callback(randomUsername)
+            }
+            .setCancelable(false)
+            .show()
+    }
+    
+    private fun generateRandomUsername(): String {
+        val adjectives = listOf("Expert", "Master", "Pro", "Elite", "Legendary")
+        val nouns = listOf("Breeder", "Grower", "Cultivator", "Geneticist", "Farmer")
+        val number = kotlin.random.Random.nextInt(1000, 9999)
+        return "${adjectives.random()}${nouns.random()}_$number"
+    }
+    
+    private fun setupSecretMarconeActivation() {
+        // Long press su logo per attivare Marcone mode
+        // TODO: Implementare se necessario
     }
     
     private fun initializeFirebaseAuth() {
