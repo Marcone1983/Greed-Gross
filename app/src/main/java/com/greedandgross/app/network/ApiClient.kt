@@ -69,7 +69,7 @@ class ApiClient {
             """.trimIndent()
             
             val requestBody = JSONObject().apply {
-                put("model", "gpt-4o-mini")
+                put("model", "ft:gpt-4o-mini-2024-07-18:greed-gross:greed-gross-breeder")
                 put("messages", JSONArray().apply {
                     put(JSONObject().apply {
                         put("role", "system")
@@ -173,7 +173,7 @@ class ApiClient {
             """.trimIndent()
             
             val requestBody = JSONObject().apply {
-                put("model", "gpt-4o-mini")
+                put("model", "ft:gpt-4o-mini-2024-07-18:greed-gross:greed-gross-breeder")
                 put("messages", JSONArray().apply {
                     put(JSONObject().apply {
                         put("role", "system")
