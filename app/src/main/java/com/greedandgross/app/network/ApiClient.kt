@@ -113,7 +113,7 @@ class ApiClient {
             """.trimIndent()
             
             val requestBody = JSONObject().apply {
-                put("model", "ft:gpt-4o-mini-2024-07-18:greed-gross:greed-gross-breeder")
+                put("model", "gpt-4o-mini")
                 put("messages", JSONArray().apply {
                     put(JSONObject().apply {
                         put("role", "system")
@@ -141,11 +141,6 @@ class ApiClient {
             android.util.Log.d("ApiClient", "Response code: ${response.code}")
             android.util.Log.d("ApiClient", "Response body: ${responseBody?.take(200)}")
             
-            // Se 404, retry con modello standard mantenendo il prompt custom
-            if (response.code == 404) {
-                android.util.Log.w("ApiClient", "Model not found (404), retrying with standard model")
-                return retryWithStandardModel(prompt, uid, crossID)
-            }
             
             if (response.isSuccessful && responseBody != null) {
                 val jsonResponse = JSONObject(responseBody)
@@ -223,7 +218,7 @@ class ApiClient {
             """.trimIndent()
             
             val requestBody = JSONObject().apply {
-                put("model", "ft:gpt-4o-mini-2024-07-18:greed-gross:greed-gross-breeder")
+                put("model", "gpt-4o-mini")
                 put("messages", JSONArray().apply {
                     put(JSONObject().apply {
                         put("role", "system")
