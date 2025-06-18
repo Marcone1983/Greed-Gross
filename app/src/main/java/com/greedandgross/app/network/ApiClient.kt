@@ -92,45 +92,16 @@ class ApiClient {
     
     suspend fun analyzeBreedingMessage(message: String): String = withContext(Dispatchers.IO) {
         try {
-            android.util.Log.d("ApiClient", "Starting breeding analysis for: $message")
+            android.util.Log.d("ApiClient", "Calling backend for: $message")
             
-            // Genera ID univoco per questo incrocio
-            val crossID = generateCrossID(message)
-            val uid = FirebaseAuth.getInstance().currentUser?.uid ?: "anonymous"
-            
-            // Prima controlla se abbiamo già questa risposta in cache
-            val cachedResponse = getCachedResponse(uid, crossID)
-            if (cachedResponse != null) {
-                android.util.Log.d("ApiClient", "✅ Usando risposta CACHED per: $crossID")
-                return@withContext cachedResponse
-            }
-            
-            android.util.Log.d("ApiClient", "🔄 Generando NUOVA risposta per: $crossID")
-            val prompt = """
-            MESSAGGIO UTENTE: "$message"
-            
-            ${LanguageManager.getAILanguagePrompt()}
-            """.trimIndent()
-            
+            val userId = FirebaseAuth.getInstance().currentUser?.uid ?: "anonymous"
             val requestBody = JSONObject().apply {
-                put("model", "gpt-4o-mini")
-                put("messages", JSONArray().apply {
-                    put(JSONObject().apply {
-                        put("role", "system")
-                        put("content", GREED_GROSS_SYSTEM_PROMPT)
-                    })
-                    put(JSONObject().apply {
-                        put("role", "user")
-                        put("content", prompt)
-                    })
-                })
-                put("max_tokens", 2000)
-                put("temperature", 0.7)
+                put("userId", userId)
+                put("query", message)
             }
             
             val request = Request.Builder()
-                .url("https://api.openai.com/v1/chat/completions")
-                .addHeader("Authorization", "Bearer $apiKey")
+                .url("https://backend-c87lbeqq1-ghostbridges-projects.vercel.app/generate")
                 .addHeader("Content-Type", "application/json")
                 .post(requestBody.toString().toRequestBody("application/json".toMediaType()))
                 .build()
@@ -138,31 +109,19 @@ class ApiClient {
             val response = client.newCall(request).execute()
             val responseBody = response.body?.string()
             
-            android.util.Log.d("ApiClient", "Response code: ${response.code}")
-            android.util.Log.d("ApiClient", "Response body: ${responseBody?.take(200)}")
-            
+            android.util.Log.d("ApiClient", "Backend response: ${response.code}")
+            android.util.Log.d("ApiClient", "Backend body: ${responseBody?.take(200)}")
             
             if (response.isSuccessful && responseBody != null) {
                 val jsonResponse = JSONObject(responseBody)
-                val gptResponse = jsonResponse
-                    .getJSONArray("choices")
-                    .getJSONObject(0)
-                    .getJSONObject("message")
-                    .getString("content")
-                
-                // Salva in cache per usi futuri
-                saveCachedResponse(uid, crossID, gptResponse)
-                
-                gptResponse
+                jsonResponse.getString("response")
             } else {
-                val errorMsg = "Errore API: Code ${response.code}, Body: $responseBody"
-                android.util.Log.e("ApiClient", errorMsg)
-                "Errore nella generazione della risposta. Code: ${response.code}"
+                "Errore backend: ${response.code}"
             }
             
         } catch (e: Exception) {
-            android.util.Log.e("ApiClient", "Exception in analyzeBreedingMessage", e)
-            "Errore di connessione: ${e.message}"
+            android.util.Log.e("ApiClient", "Exception calling backend", e)
+            "Errore backend: ${e.message}"
         }
     }
     
@@ -203,7 +162,7 @@ class ApiClient {
     suspend fun crossStrains(strain1: String, strain2: String): BreedingResponse = withContext(Dispatchers.IO) {
         try {
             val prompt = """
-            Sei un esperto genetista di cannabis. Analizza l'incrocio tra questi due strain:
+            Analizza l'incrocio tra questi due strain:
             - Strain 1: $strain1
             - Strain 2: $strain2
             
@@ -217,25 +176,16 @@ class ApiClient {
             ${LanguageManager.getAILanguagePrompt()} Formato professionale.
             """.trimIndent()
             
+            android.util.Log.d("ApiClient", "Calling backend for cross: $strain1 x $strain2")
+            
+            val userId = FirebaseAuth.getInstance().currentUser?.uid ?: "anonymous"
             val requestBody = JSONObject().apply {
-                put("model", "gpt-4o-mini")
-                put("messages", JSONArray().apply {
-                    put(JSONObject().apply {
-                        put("role", "system")
-                        put("content", GREED_GROSS_SYSTEM_PROMPT)
-                    })
-                    put(JSONObject().apply {
-                        put("role", "user")
-                        put("content", prompt)
-                    })
-                })
-                put("max_tokens", 2000)
-                put("temperature", 0.7)
+                put("userId", userId)
+                put("query", prompt)
             }
             
             val request = Request.Builder()
-                .url("https://api.openai.com/v1/chat/completions")
-                .addHeader("Authorization", "Bearer $apiKey")
+                .url("https://backend-c87lbeqq1-ghostbridges-projects.vercel.app/generate")
                 .addHeader("Content-Type", "application/json")
                 .post(requestBody.toString().toRequestBody("application/json".toMediaType()))
                 .build()
@@ -243,20 +193,15 @@ class ApiClient {
             val response = client.newCall(request).execute()
             val responseBody = response.body?.string()
             
-            android.util.Log.d("ApiClient", "Breeding - Response code: ${response.code}")
-            android.util.Log.d("ApiClient", "Breeding - Response body: $responseBody")
+            android.util.Log.d("ApiClient", "Backend cross response: ${response.code}")
+            android.util.Log.d("ApiClient", "Backend cross body: ${responseBody?.take(200)}")
             
             if (response.isSuccessful && responseBody != null) {
                 val jsonResponse = JSONObject(responseBody)
-                val content = jsonResponse
-                    .getJSONArray("choices")
-                    .getJSONObject(0)
-                    .getJSONObject("message")
-                    .getString("content")
-                
+                val content = jsonResponse.getString("response")
                 BreedingResponse(content)
             } else {
-                BreedingResponse("Errore nella generazione dell'analisi. Riprova.")
+                BreedingResponse("Errore backend: ${response.code}")
             }
             
         } catch (e: java.net.UnknownHostException) {
@@ -264,7 +209,8 @@ class ApiClient {
         } catch (e: java.net.SocketTimeoutException) {
             BreedingResponse("Timeout della richiesta. Il server sta impiegando troppo tempo a rispondere.")
         } catch (e: Exception) {
-            BreedingResponse("Errore API: ${e.message ?: "Errore sconosciuto durante l'analisi"}")
+            android.util.Log.e("ApiClient", "Exception calling backend for cross", e)
+            BreedingResponse("Errore backend: ${e.message ?: "Errore sconosciuto durante l'analisi"}")
         }
     }
     
