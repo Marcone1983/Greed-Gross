@@ -131,7 +131,6 @@ class BreedingChatActivity : AppCompatActivity() {
             android.util.Log.d("BreedingChat", "Trial available - continuing")
             continueWithMessage()
         }
-        }
     }
     
     private fun continueWithMessage() {
