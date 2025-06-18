@@ -101,7 +101,7 @@ class ApiClient {
             }
             
             val request = Request.Builder()
-                .url("https://backend-c87lbeqq1-ghostbridges-projects.vercel.app/generate")
+                .url("https://greed-gross.vercel.app/generate")
                 .addHeader("Content-Type", "application/json")
                 .post(requestBody.toString().toRequestBody("application/json".toMediaType()))
                 .build()
@@ -185,7 +185,7 @@ class ApiClient {
             }
             
             val request = Request.Builder()
-                .url("https://backend-c87lbeqq1-ghostbridges-projects.vercel.app/generate")
+                .url("https://greed-gross.vercel.app/generate")
                 .addHeader("Content-Type", "application/json")
                 .post(requestBody.toString().toRequestBody("application/json".toMediaType()))
                 .build()
