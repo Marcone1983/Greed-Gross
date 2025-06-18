@@ -71,13 +71,20 @@ class SettingsActivity : AppCompatActivity() {
             val prefs = getSharedPreferences("greed_gross_prefs", MODE_PRIVATE)
             val username = prefs.getString("persistent_username", null)
             
+            android.util.Log.d("SettingsActivity", "Owner mode tap - Username: $username, Tap count: ${secretTapCount + 1}")
+            
             if (username == "Marcone") {
                 secretTapCount++
+                android.util.Log.d("SettingsActivity", "Marcone tap count: $secretTapCount")
                 if (secretTapCount >= 7) {
                     // ACCESSO ADMIN SEGRETO!
+                    android.util.Log.d("SettingsActivity", "Opening AdminActivity")
                     startActivity(Intent(this, AdminActivity::class.java))
                     secretTapCount = 0
                 }
+            } else {
+                android.util.Log.d("SettingsActivity", "Not Marcone - resetting count")
+                secretTapCount = 0
             }
         }
         
@@ -112,14 +119,17 @@ class SettingsActivity : AppCompatActivity() {
     
     private fun setupLegalLinks() {
         privacyPolicyLink.setOnClickListener {
+            android.util.Log.d("SettingsActivity", "Privacy Policy clicked - URL: $PRIVACY_POLICY_URL")
             openWebUrl(PRIVACY_POLICY_URL)
         }
         
         termsOfServiceLink.setOnClickListener {
+            android.util.Log.d("SettingsActivity", "Terms of Service clicked - URL: $TERMS_OF_SERVICE_URL")
             openWebUrl(TERMS_OF_SERVICE_URL)
         }
         
         deleteAccountLink.setOnClickListener {
+            android.util.Log.d("SettingsActivity", "Delete Account clicked")
             showDeleteAccountDialog()
         }
     }

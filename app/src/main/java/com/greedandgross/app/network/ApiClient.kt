@@ -46,6 +46,50 @@ class ApiClient {
         return cleaned
     }
     
+    private suspend fun retryWithStandardModel(prompt: String, uid: String, crossID: String): String {
+        android.util.Log.d("ApiClient", "Retrying with standard model but keeping GREED_GROSS_SYSTEM_PROMPT")
+        
+        val requestBody = JSONObject().apply {
+            put("model", "gpt-4o-mini-2024-07-18")  // Standard model
+            put("messages", JSONArray().apply {
+                put(JSONObject().apply {
+                    put("role", "system")
+                    put("content", GREED_GROSS_SYSTEM_PROMPT)  // Keep custom prompt!
+                })
+                put(JSONObject().apply {
+                    put("role", "user")
+                    put("content", prompt)
+                })
+            })
+            put("max_tokens", 2000)
+            put("temperature", 0.7)
+        }
+        
+        val request = Request.Builder()
+            .url("https://api.openai.com/v1/chat/completions")
+            .addHeader("Authorization", "Bearer $apiKey")
+            .addHeader("Content-Type", "application/json")
+            .post(requestBody.toString().toRequestBody("application/json".toMediaType()))
+            .build()
+        
+        val response = client.newCall(request).execute()
+        val responseBody = response.body?.string()
+        
+        if (response.isSuccessful && responseBody != null) {
+            val jsonResponse = JSONObject(responseBody)
+            val gptResponse = jsonResponse
+                .getJSONArray("choices")
+                .getJSONObject(0)
+                .getJSONObject("message")
+                .getString("content")
+            
+            saveCachedResponse(uid, crossID, gptResponse)
+            return gptResponse
+        } else {
+            throw IOException("Errore API anche con modello standard: ${response.code}")
+        }
+    }
+    
     suspend fun analyzeBreedingMessage(message: String): String = withContext(Dispatchers.IO) {
         try {
             android.util.Log.d("ApiClient", "Starting breeding analysis for: $message")
@@ -96,6 +140,12 @@ class ApiClient {
             
             android.util.Log.d("ApiClient", "Response code: ${response.code}")
             android.util.Log.d("ApiClient", "Response body: ${responseBody?.take(200)}")
+            
+            // Se 404, retry con modello standard mantenendo il prompt custom
+            if (response.code == 404) {
+                android.util.Log.w("ApiClient", "Model not found (404), retrying with standard model")
+                return retryWithStandardModel(prompt, uid, crossID)
+            }
             
             if (response.isSuccessful && responseBody != null) {
                 val jsonResponse = JSONObject(responseBody)
